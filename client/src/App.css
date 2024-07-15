@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.form {
+  background-color: #CCCADE;
+  width: 40%; /* Adjust as needed */
+  height: 40%; /* Adjust as needed */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-header, .form-body {
+  justify-content: center;
+}
