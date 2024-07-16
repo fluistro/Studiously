@@ -33,6 +33,7 @@ export default function Signup() {
     return (
         <div className="form">
             <div className="form-header">
+                <p>Already have an account? <a href="/login">Log in</a></p>
                 <h1>Create an account</h1>
             </div>
             
@@ -44,7 +45,7 @@ export default function Signup() {
                     <input type="text" id="username" name="username" onChange={onInputChange}></input><br/><br/>
                     <label htmlFor="password">Password</label><br/>
                     <input type="text" id="password" name="password" onChange={onInputChange}></input><br/><br/>
-                    <button type="submit" onClick={onSubmit}>Sign up</button>
+                    <button type="submit" onClick={onSubmit} id="submit-button"><b>Sign up</b></button>
                 </form>
             </div>
         </div>

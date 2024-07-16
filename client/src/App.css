@@ -39,8 +39,10 @@
 
 .form {
   background-color: #CCCADE;
-  width: 40%; /* Adjust as needed */
-  height: 40%; /* Adjust as needed */
+  width: 40%;
+  max-width: 500px;
+  height: 50%;
+  min-height: 500px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -49,8 +51,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 2px 2px 2px 1px #282c34;
+  border-radius: 4px;
 }
 
-.form-header, .form-body {
+.form-body {
+  display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+#submit-button {
+  background-color:#a376de;
+  height: 40px;
+  width: 80px;
+  border-radius: 5px;
 }
