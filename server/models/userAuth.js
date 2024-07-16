@@ -27,13 +27,8 @@ UserAuthSchema.pre("save", async function() {
 
 // Search for user given credentials
 // Pre: user has username and password fields
-UserAuthSchema.statics.findUser = async function(user) {
-    const doc = this.findOne({ username: user.username });
-    if (!doc) return errors.USER_NOT_FOUND;
-    if (bcrypt.compareSync(user.password, doc.password)) {
-        return doc._id;
-    }
-    return errors.PASSWORD_INCORRECT;
+UserAuthSchema.methods.passwordMatches = function(plain_pass) {
+    return bcrypt.compareSync(plain_pass, this.password);
 }
 
 const UserAuth = mongoose.model('User', UserAuthSchema);
