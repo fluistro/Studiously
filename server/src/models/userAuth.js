@@ -1,6 +1,6 @@
 // Imports
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+import mongoose from "mongoose";
+import { hashSync, compareSync } from "bcryptjs";
 
 // Error messages
 export const errors = {
@@ -8,6 +8,7 @@ export const errors = {
     PASSWORD_INCORRECT: "password is incorrect",
 }
 
+// Schema
 const UserAuthSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -22,14 +23,13 @@ const UserAuthSchema = new mongoose.Schema({
 
 // Encrypt password before saving
 UserAuthSchema.pre("save", async function() {
-    if (this.isModified("password")) this.password = bcrypt.hashSync(this.password, 10);
+    if (this.isModified("password")) this.password = hashSync(this.password, 10);
 });
 
-// Search for user given credentials
-// Pre: user has username and password fields
+// Return true if plaintext password is correct
 UserAuthSchema.methods.passwordMatches = function(plain_pass) {
-    return bcrypt.compareSync(plain_pass, this.password);
-}
+    return compareSync(plain_pass, this.password);
+};
 
 const UserAuth = mongoose.model('User', UserAuthSchema);
 export default UserAuth;
