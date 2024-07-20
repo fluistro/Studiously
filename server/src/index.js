@@ -1,2 +1,2 @@
-require = require("esm")(module/* , options */);
-module.exports = require("./server.js");
+import server from "./server.js";
+export default server;

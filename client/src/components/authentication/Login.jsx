@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from 'axios';
 import { Navigate } from 'react-router-dom'; 
 
 export default function Login() {
@@ -18,16 +17,16 @@ export default function Login() {
     async function onSubmit(event) {
 
         event.preventDefault();
-        axios.post(
-            "http://localhost:8000/api/login", 
-            JSON.stringify(userInfo)
-        ).then(
+        fetch("http://localhost:5000/api/login", {
+            method: "POST",
+            body: JSON.stringify(userInfo)
+        }).then(
             res => {
                 const data = res.data;
                 if (!data.error) setSuccess(true);
                 else setError(data.error);
             }
-        ).catch();
+        ).catch(err => console.log(err));
 
     }
 
@@ -41,7 +40,6 @@ export default function Login() {
             
             <div className="form-body">
                 {error && <p className="error">Error: {error}</p>}
-                {success && <p>Account created! Please <a href="/login">log in</a>.</p>}
                 <form>
                     <label htmlFor="username">Username</label><br/>
                     <input type="text" id="username" name="username" onChange={onInputChange}></input><br/><br/>

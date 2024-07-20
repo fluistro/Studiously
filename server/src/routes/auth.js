@@ -1,5 +1,5 @@
 import express from "express";
-import UserAuth from "../models/userAuth";
+import UserAuth from "../models/userAuth.js";
 
 const AuthRouter = express.Router();
 
@@ -71,7 +71,8 @@ AuthRouter.delete("/logout", (req, res) => {
 
 // Respond with username and user_id if logged in, and undefined if not
 AuthRouter.get("/", ({ session: { user }}, res) => {
-    res.send(user);
+    if (user) res.send(user);
+    else res.send({user: "test"});
 });
 
 export default AuthRouter;

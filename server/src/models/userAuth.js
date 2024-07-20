@@ -1,6 +1,7 @@
 // Imports
 import mongoose from "mongoose";
-import { hashSync, compareSync } from "bcryptjs";
+import bcrypt from "bcryptjs";
+const { hashSync, compareSync } = bcrypt;
 
 // Error messages
 export const errors = {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from 'axios';
 
 export default function Signup() {
 
@@ -17,16 +16,16 @@ export default function Signup() {
     async function onSubmit(event) {
 
         event.preventDefault();
-        axios.post(
-            "http://localhost:8000/api/signup", 
-            JSON.stringify(userInfo)
-        ).then(
+        fetch("http://localhost:5000/api/signup", {
+            method: "POST",
+            body: JSON.stringify(userInfo)
+        }).then(
             res => {
                 const data = res.data;
                 if (!data.error) setSuccess(true);
                 else setError(data.error);
             }
-        ).catch();
+        ).catch(err => console.log(err));
 
     }
 
