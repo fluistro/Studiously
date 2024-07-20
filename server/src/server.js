@@ -1,23 +1,30 @@
+// Imports
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
+// Environment variables
 import { PORT, NODE_ENV, MONGO_URI, SESSION_NAME, SESSION_SECRET, SESSION_LIFETIME } from "./config.js";
+
+// Routers
 import AuthRouter from "./routes/auth.js";
 
 (async () => {
     try {
 
+        // Connect to MongoDB
         await mongoose.connect(MONGO_URI);
         console.log('MongoDB connected');
     
+        // Initialize express app
         const app = express();
-    
         app.disable('x-powered-by');
         app.use(cors());
         app.use(express.json());
+
+        // Use user session for authentication
         app.use(session({
             name: SESSION_NAME,
             secret: SESSION_SECRET,
@@ -35,8 +42,10 @@ import AuthRouter from "./routes/auth.js";
             }
         }));
     
+        // Connect routers and begin listening
         const apiRouter = express.Router();
         apiRouter.use("/auth", AuthRouter);
+
         app.use("/api", apiRouter);
     
         app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
