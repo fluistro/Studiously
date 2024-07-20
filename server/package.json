@@ -2,8 +2,8 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.js",
-  "module": "./src/index.js",
+  "main": "./src/server.js",
+  "module": "./src/server.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon --env-file=.env ./src/server.js"
