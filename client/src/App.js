@@ -1,5 +1,5 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './App.css';
 
 // Components
@@ -11,10 +11,6 @@ const router = createBrowserRouter([
 
   // Authentication
   {
-    path: "/",
-    element: <Login />,
-  },
-  {
     path: "/login",
     element: <Login />,
   },
@@ -25,14 +21,21 @@ const router = createBrowserRouter([
 
   // Home
   {
+    path: "/",
+    element: <Navigate to="/home" />,
+  },
+  {
     path: "/home",
     element: <Home />,
-    children: [],
+    //children: [],
   }
 
 ]);
 
 function App() {
+  useEffect(() => {
+    console.log("App useEffect");
+  }, []);
   return <RouterProvider router={router} />;
 }
 

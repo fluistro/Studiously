@@ -29,9 +29,10 @@ AuthRouter.post("/signup", async (req, res) => {
         // Send id and username as response
         res.send({ user_id: newUser.id, username });
 
-    } catch(err) {
-        console.log(err);
-        res.status(400).send(err);
+    } catch(error) {
+        res.status(400).send({
+            "error": error.message
+        });
     }
     
 });
@@ -61,15 +62,17 @@ AuthRouter.post("/login", async (req, res) => {
             user_id: user.id
         }
         req.session.user = userInfo;
-        res.send(userInfo);
+        res.send(req.session.user);
 
-    } catch(err) {
-        res.status(400).send(err);
+    } catch(error) {
+        res.status(400).send({
+            "error": error.message
+        });
     }
 
 });
 
-// Logout, delete current user session
+// Logout, delete current user session 
 AuthRouter.delete("/logout", (req, res) => {
 
     const session = req.session;
@@ -92,7 +95,9 @@ AuthRouter.delete("/logout", (req, res) => {
 });
 
 // Respond with username and user_id if logged in, and undefined if not
-AuthRouter.get("/", ({ session: { user }}, res) => {
+AuthRouter.get("/", (req, res) => {
+    //console.log(req.session);
+    const user = req.session.user;
     if (user) res.send(user);
     else res.send({user: undefined});
 });

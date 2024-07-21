@@ -21,7 +21,10 @@ import AuthRouter from "./routes/auth.js";
         // Initialize express app
         const app = express();
         app.disable('x-powered-by');
-        app.use(cors());
+        app.use(cors({
+            origin: 'http://localhost:3000',
+            credentials: true
+        }));
         app.use(express.json());
 
         // Use user session for authentication

@@ -16,16 +16,17 @@ export default function Signup() {
     async function onSubmit(event) {
 
         event.preventDefault();
-        fetch("http://localhost:5000/api/signup", {
+        console.log(userInfo);
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(userInfo)
-        }).then(
-            res => {
-                const data = res.data;
-                if (!data.error) setSuccess(true);
-                else setError(data.error);
-            }
-        ).catch(err => console.log(err));
+        });
+        const data = await res.json();
+        if (data.error) setError(data.error);
+        else setSuccess(true);
 
     }
 
@@ -43,7 +44,7 @@ export default function Signup() {
                     <label htmlFor="username">Username</label><br/>
                     <input type="text" id="username" name="username" onChange={onInputChange}></input><br/><br/>
                     <label htmlFor="password">Password</label><br/>
-                    <input type="text" id="password" name="password" onChange={onInputChange}></input><br/><br/>
+                    <input type="password" id="password" name="password" onChange={onInputChange}></input><br/><br/>
                     <button type="submit" onClick={onSubmit} id="submit-button"><b>Sign up</b></button>
                 </form>
             </div>
