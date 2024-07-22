@@ -25,8 +25,8 @@ const UserSchema = new mongoose.Schema({
     },
 
     // Array of course ids
-    courses: [String],
-    
+    courses: [mongoose.SchemaTypes.ObjectId],
+
 });
 
 // Encrypt password before saving

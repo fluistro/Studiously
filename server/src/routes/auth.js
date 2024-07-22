@@ -59,7 +59,7 @@ AuthRouter.post("/login", async (req, res) => {
         // Send user information and update session
         const userInfo = {
             username: user.username,
-            user_id: user.id
+            user_id: user._id
         }
         req.session.user = userInfo;
         res.send(req.session.user);

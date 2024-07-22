@@ -8,13 +8,10 @@ const CourseSchema = new mongoose.Schema({
     },
 
     grade: Number,
-    manuallyEnterGrade: {
-        type: Boolean,
-        required: true,
-    },
+    manuallyEnterGrade: Boolean,
 
     // Array of assignment ids
-    assignments: [String]
+    assignments: [mongoose.SchemaTypes.ObjectId]
 
 });
 
