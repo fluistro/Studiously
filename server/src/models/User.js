@@ -10,27 +10,34 @@ export const errors = {
 }
 
 // Schema
-const UserAuthSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
+
     username: {
         type: String,
         required: true,
         unique: true
     },
+
+    // Encrypted
     password: {
         type: String,
         required: true,
     },
+
+    // Array of course ids
+    courses: [String],
+    
 });
 
 // Encrypt password before saving
-UserAuthSchema.pre("save", async function() {
+UserSchema.pre("save", async function() {
     if (this.isModified("password")) this.password = hashSync(this.password, 10);
 });
 
 // Return true if plaintext password is correct
-UserAuthSchema.methods.passwordMatches = function(plain_pass) {
+UserSchema.methods.passwordMatches = function(plain_pass) {
     return compareSync(plain_pass, this.password);
 };
 
-const UserAuth = mongoose.model('User', UserAuthSchema);
-export default UserAuth;
+const User = mongoose.model('User', UserSchema);
+export default User;

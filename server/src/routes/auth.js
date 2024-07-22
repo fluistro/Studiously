@@ -1,6 +1,6 @@
 // Imports
 import express from "express";
-import UserAuth from "../models/userAuth.js";
+import User from "../models/User.js";
 
 const AuthRouter = express.Router();
 
@@ -19,11 +19,11 @@ AuthRouter.post("/signup", async (req, res) => {
 
 
         // Check if username is taken
-        const user = await UserAuth.findOne({ username });
+        const user = await User.findOne({ username });
         if (user) throw new Error("Username already taken");
 
         // Save new user to MongoDB
-        const newUser = new UserAuth({ username, password });
+        const newUser = new User({ username, password });
         await newUser.save();
 
         // Send id and username as response
@@ -52,7 +52,7 @@ AuthRouter.post("/login", async (req, res) => {
         }
 
         // Search for username and password in MongoDB
-        const user = await UserAuth.findOne({ username });
+        const user = await User.findOne({ username });
         if (!user) throw new Error("Username not found");
         if (!user.passwordMatches(password)) throw new Error("Incorrect password");
         
