@@ -10,6 +10,7 @@ import { PORT, NODE_ENV, MONGO_URI, SESSION_NAME, SESSION_SECRET, SESSION_LIFETI
 
 // Routers
 import AuthRouter from "./routes/auth.js";
+import CourseRouter from "./routes/courses.js";
 
 (async () => {
     try {
@@ -48,6 +49,7 @@ import AuthRouter from "./routes/auth.js";
         // Connect routers and begin listening
         const apiRouter = express.Router();
         apiRouter.use("/auth", AuthRouter);
+        apiRouter.use("/courses", CourseRouter);
 
         app.use("/api", apiRouter);
     

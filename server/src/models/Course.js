@@ -16,4 +16,7 @@ const CourseSchema = new mongoose.Schema({
     // Array of assignment ids
     assignments: [String]
 
-})
+});
+
+const Course = mongoose.model('User', CourseSchema);
+export default Course;
