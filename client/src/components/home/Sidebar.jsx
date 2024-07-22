@@ -4,6 +4,7 @@ import "./Sidebar.css";
 
 export default function Sidebar(props) {
 
+    // Send request to delete user session
     async function logout() {
         await fetch(`http://localhost:5000/api/auth/logout`, {
             method: "DELETE",

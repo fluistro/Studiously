@@ -13,10 +13,12 @@ export default function AuthForm({ OnSuccess, Header, endpoint }) {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
 
+    // Update username and password when fields are changed
     function onInputChange(event) {
         setUserInfo({...userInfo, [event.target.name]: event.target.value});
     }
 
+    // Send request to appropriate endpoint when form is submitted
     async function onSubmit(event) {
 
         event.preventDefault();
