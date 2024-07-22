@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './App.css';
 
@@ -6,6 +6,8 @@ import './App.css';
 import Login from './components/authentication/Login';
 import Signup from './components/authentication/Signup';
 import Home from './components/home/Home';
+import Dashboard from './components/home/Dashboard';
+import CourseList from './components/home/CourseList';
 
 const router = createBrowserRouter([
 
@@ -27,15 +29,21 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home />,
-    //children: [],
+    children: [
+      {
+        path: "/home",
+        element: <Dashboard />,
+      },
+      {
+        path: "/home/courses",
+        element: <CourseList />,
+      }
+    ],
   }
 
 ]);
 
 function App() {
-  useEffect(() => {
-    console.log("App useEffect");
-  }, []);
   return <RouterProvider router={router} />;
 }
 

@@ -1,33 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 
 export default function Home() {
 
     const [user, setUser] = useState();
 
-    // Get current user on first render
+    // Set current user on first render
     useEffect(() => {
-        console.log("useEffect");
+        console.log("home useEffect");
         fetch("http://localhost:5000/api/auth/", { credentials: 'include' })
             .then(res => res.json())
-            .then(data => { console.log(data); setUser(data.username) });
-        /*
-        async function getUser () {
-            const res = await fetch("http://localhost:5000/api/auth/");
-            const data = await res.json();
-            setUser(data.user);
-        };
-        getUser();
-        */
+            .then(data => setUser(data.username));
     }, []);
-
-    console.log(user);
 
     return user ? (
         <div>
-            <h1>Homepage</h1>
+            <Sidebar user={user} setUser={setUser} />
             <Outlet />
         </div>
     ) : <p>Please <a href="/login">log in</a></p>;
+
 };
