@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-
+import "./Home.css";
 
 export default function Home() {
 
@@ -17,7 +17,7 @@ export default function Home() {
     }, []);
 
     return user ? (
-        <div>
+        <div className="home-background">
             <Sidebar user={user.username} setUser={setUser} />
             <Outlet />
         </div>

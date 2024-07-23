@@ -1,5 +1,9 @@
 import React from "react";
 
 export default function CourseList() {
-    return <h1 className="content">Courses</h1>;
+    return (
+        <div className="content">
+            <h1>Courses</h1>
+        </div>
+    );
 };
