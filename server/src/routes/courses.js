@@ -33,12 +33,15 @@ CourseRouter.get("/", async (req, res) => {
         if (!user) throw new Error("User not found");
 
         let courses = user.courses;
-        courses.map(courseId => {
-            const courseInfo = Course.findById(courseId);
-            if (!courseInfo) throw new Error(`Course id not found: ${courseId}`);
-            return courseInfo;
-        })
-        return courses;
+        let result = [];
+
+        for (let i = 0; i < courses.length; i++) {
+            const courseInfo = await Course.findById(courses[i]);
+            if (!courseInfo) throw new Error(`Course id not found: ${courses[i]}`);
+            result.push(courseInfo);
+        }
+
+        res.send(result);
 
     } catch (error) {
         res.status(400).send({
@@ -61,7 +64,7 @@ CourseRouter.get("/:id", async (req, res) => {
         if (!user.courses.includes(courseId)) throw new Error("Course not found in user course list");
 
         // Get course information
-        const course = Course.findById(courseId);
+        const course = await Course.findById(courseId);
         if (!course) throw new Error("Course id not found");
         res.send(course);
 
@@ -80,7 +83,7 @@ CourseRouter.post("/create", async (req, res) => {
         
         // Validate body
         const { name, manuallyEnterGrade } = req.body;
-        if (!name || !manuallyEnterGrade) {
+        if ((typeof name === "undefined") || (typeof manuallyEnterGrade === "undefined")) {
             throw new Error("Request body missing field");
         }
 
@@ -96,6 +99,7 @@ CourseRouter.post("/create", async (req, res) => {
 
         // Save new course
         newCourse.save();
+        res.send(newCourse);
 
     } catch (error) {
         res.status(400).send({
@@ -112,7 +116,7 @@ CourseRouter.put("/edit/:id", async (req, res) => {
 
         // Validate body
         const { name, grade, manuallyEnterGrade } = req.body;
-        if (!name || !grade || !manuallyEnterGrade) {
+        if ((typeof name === "undefined") || (typeof manuallyEnterGrade === "undefined")) {
             throw new Error("Request body missing field");
         }
 
@@ -124,7 +128,7 @@ CourseRouter.put("/edit/:id", async (req, res) => {
         if (!user.courses.includes(courseId)) throw new Error("Course not found in user course list");
 
         // Update course
-        const updateInfo = Course.updateOne(
+        const updateInfo = await Course.updateOne(
             { _id: courseId },
             { name, grade, manuallyEnterGrade }
         );

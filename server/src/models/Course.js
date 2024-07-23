@@ -15,5 +15,10 @@ const CourseSchema = new mongoose.Schema({
 
 });
 
-const Course = mongoose.model('User', CourseSchema);
+// Make empty courses array if none exists
+CourseSchema.pre("save", function() {
+    if (typeof this.assignments == "undefined") this.assignments = [];
+});
+
+const Course = mongoose.model('Course', CourseSchema);
 export default Course;
