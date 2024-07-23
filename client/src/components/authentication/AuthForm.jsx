@@ -4,7 +4,7 @@ import "./Form.css";
 // endpoint: "login" or "signup"
 // OnSuccess: JSX element to display when form submitted successfully
 // Header: JSX element
-export default function AuthForm({ OnSuccess, Header, endpoint }) {
+export default function AuthForm({ OnSuccess, Header, Footer, endpoint }) {
 
     const [userInfo, setUserInfo] = useState({
         username: "",
@@ -38,18 +38,23 @@ export default function AuthForm({ OnSuccess, Header, endpoint }) {
 
     return (
         success ? OnSuccess : 
-        <div className="form">
-            {Header}
-            <div>{error && <p className="error">Error: {error}</p>}</div>
-            
-            <div className="form-body">
-                <form>
-                    <label htmlFor="username">Username</label><br/>
-                    <input type="text" id="username" name="username" onChange={onInputChange}></input><br/><br/>
-                    <label htmlFor="password">Password</label><br/>
-                    <input type="password" id="password" name="password" onChange={onInputChange}></input><br/><br/>
+        <div className="form-background">
+            <div className="form">
+                {Header}
+
+                <div className="form-error">{error && <p className="error">Error: {error}</p>}</div>
+                
+                <div className="form-body">
+                    <form>
+                        <label htmlFor="username">Username</label><br/>
+                        <input type="text" id="username" name="username" onChange={onInputChange}></input><br/><br/>
+                        <label htmlFor="password">Password</label><br/>
+                        <input type="password" id="password" name="password" onChange={onInputChange}></input><br/><br/>
+                    </form>
                     <button type="submit" onClick={onSubmit} id="submit-button"><b>Log in</b></button>
-                </form>
+                </div>
+
+                {Footer}
             </div>
         </div>
     )
