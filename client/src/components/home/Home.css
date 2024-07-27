@@ -4,10 +4,10 @@
 }
 
 .content {
-    margin-left: 350px;
+    margin-left: 300px;
     padding: 20px;
     box-sizing: border-box;
-    width: calc(100% - 350px);
+    width: calc(100% - 300px);
     background-color: #f4f4f4;
     height: 100%;
 }
@@ -25,4 +25,19 @@
     padding:8px 16px;
     text-align:left;
     border:none;
+}
+
+.list-block {
+    background-color: #CCCADE;
+
+    height: 50px;
+    margin: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 22px;
 }

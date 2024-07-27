@@ -9,15 +9,11 @@ const CourseRouter = express.Router();
 CourseRouter.use((req, res, next) => {
 
     const currentUser = req.session.user;
-    const requestedUser = req.body.user; // user id
 
     if (!currentUser) {
         res.status(400).send({ "error": "Not currently logged in" })
-    }
-    if (!requestedUser || !(currentUser.user_id === requestedUser)) {
-        res.status(400).send({ "error": `Invalid user id: ${requestedUser}`});
     } else {
-        req.user_id = requestedUser;
+        req.user_id = currentUser.user_id;
         next();
     }
 

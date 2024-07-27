@@ -10,7 +10,6 @@ export default function Home() {
 
     // Set current user on first render
     useEffect(() => {
-        console.log("home useEffect");
         fetch("http://localhost:5000/api/auth/", { credentials: 'include' })
             .then(res => res.json())
             .then(data => setUser(data));
@@ -19,7 +18,7 @@ export default function Home() {
     return user ? (
         <div className="home-background">
             <Sidebar user={user.username} setUser={setUser} />
-            <Outlet />
+            <Outlet user_id={user.user_id}/>
         </div>
     ) : <p>Please <a href="/login">log in</a></p>;
 
