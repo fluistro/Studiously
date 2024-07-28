@@ -1,39 +1,31 @@
 import React, { useState } from "react";
 import "./Form.css";
 
-// endpoint: "login" or "signup"
+// request: the login/signup API request to be sent on submission
 // OnSuccess: JSX element to display when form submitted successfully
-// Header: JSX element
-export default function AuthForm({ OnSuccess, Header, Footer, endpoint }) {
+// Header/Footer: JSX element
+export default function AuthForm({ OnSuccess, Header, Footer, request }) {
 
+    // Form fields
     const [userInfo, setUserInfo] = useState({
         username: "",
         password: ""
     });
+
+    const [error, setError] = useState(""); // For display
     const [success, setSuccess] = useState(false);
-    const [error, setError] = useState("");
 
     // Update username and password when fields are changed
     function onInputChange(event) {
         setUserInfo({...userInfo, [event.target.name]: event.target.value});
     }
 
-    // Send request to appropriate endpoint when form is submitted
+    // Send request when form is submitted
     async function onSubmit(event) {
-
         event.preventDefault();
-        const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify(userInfo)
-        });
-        const data = await res.json();
+        const data = await request(userInfo);
         if (data.error) setError(data.error);
         else setSuccess(true);
-
     }
 
     return (

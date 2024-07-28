@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import AuthForm from "./AuthForm";
 import "./Form.css";
+import { signup } from "../../connection/authentication";
 
 export default function Signup() {
 
@@ -17,6 +18,6 @@ export default function Signup() {
         </div>
     )
 
-    return <AuthForm endpoint="signup" OnSuccess={OnSuccessComponent} Header={HeaderComponent} Footer={FooterComponent}/>;
+    return <AuthForm request={signup} OnSuccess={OnSuccessComponent} Header={HeaderComponent} Footer={FooterComponent}/>;
 
 };
