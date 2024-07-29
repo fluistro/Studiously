@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
+
 import Sidebar from "./Sidebar";
+import { getCurrentUser } from "../../connection/authentication";
 import "./Home.css";
 
 export default function Home() {
@@ -10,15 +12,15 @@ export default function Home() {
 
     // Set current user on first render
     useEffect(() => {
-        fetch("http://localhost:5000/api/auth/", { credentials: 'include' })
-            .then(res => res.json())
-            .then(data => setUser(data));
+        getCurrentUser().then(data => setUser(data));
     }, []);
+
+    console.log(user);
 
     return user ? (
         <div className="home-background">
-            <Sidebar user={user.username} setUser={setUser} />
-            <Outlet user_id={user.user_id}/>
+            <Sidebar username={user.username} user_id={user.user_id} setUser={setUser} />
+            <Outlet username={user.username} user_id={user.user_id} setUser={setUser} />
         </div>
     ) : <p>Please <a href="/login">log in</a></p>;
 

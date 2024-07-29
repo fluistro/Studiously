@@ -1,14 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { logout } from "../../connection/authentication";
 
 export default function Sidebar(props) {
 
     // Send request to delete user session
-    async function logout() {
-        await fetch(`http://localhost:5000/api/auth/logout`, {
-            method: "DELETE",
-            credentials: 'include'
-        });
+    async function handleLogout() {
+        await logout();
         props.setUser(undefined);
     }
 
@@ -17,8 +15,8 @@ export default function Sidebar(props) {
             <h3 className="sidebar-title">Studiously</h3>
             <NavLink to="/home" className="sidebar-item">Dashboard</NavLink>
             <NavLink to="/home/courses" className="sidebar-item">Courses</NavLink>
-            <p>Currently logged in as: {props.user}</p>
-            <button onClick={logout}>Log out</button>
+            <p>Currently logged in as: {props.username}</p>
+            <button onClick={handleLogout}>Log out</button>
         </div>
     );
 }

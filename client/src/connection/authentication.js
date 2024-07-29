@@ -8,9 +8,9 @@ const route = "http://localhost:5000/api/auth";
  * @param {string} user.username - The user's username.
  * @param {string} user.password - The user's plaintext password.
  * 
- * @returns {Object} - Contains either an error field, or username and user_id fields.
+ * @returns {Promise<Object>} - Contains either an error field, or username and user_id fields.
  */
-export const signup = async (user) => {
+export const signup = async user => {
 
     try {
 
@@ -39,9 +39,9 @@ export const signup = async (user) => {
  * @param {string} user.username - The user's username.
  * @param {string} user.password - The user's plaintext password.
  * 
- * @returns {Object} - Contains either an error field, or username and user_id fields.
+ * @returns {Promise<Object>} - Contains either an error field, or username and user_id fields.
  */
-export const login = async (user) => {
+export const login = async user => {
 
     try {
 
@@ -85,7 +85,7 @@ export const logout = async () => {
 /**
  * Get information of the currently logged in user.
  * 
- * @returns {Object|undefined} - Username and user_id of the current user, or undefined if not logged in.
+ * @returns {Promise<Object|undefined>} - Username and user_id of the current user, or undefined if not logged in.
  */
 export const getCurrentUser = async () => {
     try {
