@@ -7,7 +7,7 @@ export default function Sidebar(props) {
     // Send request to delete user session
     async function handleLogout() {
         await logout();
-        props.setUser(undefined);
+        props.setUser(undefined); // Log out on client side as well
     }
 
     return (

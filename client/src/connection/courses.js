@@ -1,4 +1,5 @@
 // API requests for getting course information (once authenticated)
+const route = "http://localhost:5000/api/courses";
 
 /**
  * @typedef Course 
@@ -13,8 +14,19 @@
 /**
  * @param {string} user_id 
  * 
- * @return {Promise<[Course]>}
+ * @return {Promise<[Course]>} - A list of all the user's courses
  */
 export const getCourses = async user_id => {
-    return [];
+
+    try {
+
+        const res = await fetch(`${route}/`, {
+            credentials: 'include'
+        });
+    
+        return await res.json();
+        
+    } catch (error) {
+        console.log(`Error retrieving courses: ${error}`);
+    }
 }

@@ -15,8 +15,6 @@ export default function Home() {
         getCurrentUser().then(data => setUser(data));
     }, []);
 
-    console.log(user);
-
     return user ? (
         <div className="home-background">
             <Sidebar username={user.username} user_id={user.user_id} setUser={setUser} />

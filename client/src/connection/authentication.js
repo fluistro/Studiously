@@ -93,7 +93,8 @@ export const getCurrentUser = async () => {
         const res = await fetch(`${route}/`, {
             credentials: 'include'
         });
-        return await res.json();
+        const data = await res.json();
+        if (data.user_id) return data;
         
     } catch (error) {
         console.log(`Error authenticating user: ${error}`);
