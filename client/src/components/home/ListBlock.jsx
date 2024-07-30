@@ -1,18 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ListBlock(props) {
+export default function ListBlock({ left, middle, right, link }) {
 
     const navigate = useNavigate();
     const changeRoute = () => {
-        navigate(props.link ? props.link : "");
+        if (link) navigate(link);
     }
 
     return (
-        <div className="list-block" onClick={props.link && changeRoute}>
-            <div><p>{props.left}</p></div>
-            {props.middle && <div><p>{props.middle}</p></div>}
-            <div><p>{props.right}</p></div>
+        <div className="list-block" onClick={changeRoute}>
+            <div><p>{left}</p></div>
+            <div><p>{middle}</p></div>
+            <div><p>{right}</p></div>
         </div>
     )
 

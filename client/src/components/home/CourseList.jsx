@@ -4,6 +4,7 @@ import { getCourses } from "../../connection/courses";
 import ModifyCourse from "./ModifyCourses";
 
 
+// Given a list of course information, return JSX representing that information
 function listToJSX(courses) {
 
     if (!courses) return <p>No courses have been created</p>;
@@ -13,10 +14,11 @@ function listToJSX(courses) {
             <ListBlock 
                 key={index} 
                 left={course.name} 
-                right={typeof course.grade !== "undefined" && `${course.grade}%`}
+                right={typeof course.grade !== "undefined" && `${course.grade}%`} // Blank if grade is undefined
                 link={`/home/courses/${course._id}`} />
         );
     });
+
 }
 
 
@@ -30,6 +32,9 @@ export default function CourseList(props) {
     */
     const [ sortCriteria, setSortCriteria ] = useState("name");
     const [ courseList, setCourseList ] = useState(null);
+
+    // Lightbox for creating courses
+    const [ showLightbox, setShowLightbox ] = useState(false);
 
     // Function for sorting courseList based on criteria
     async function sortCourses() {
@@ -85,23 +90,26 @@ export default function CourseList(props) {
     }
 
     // Update courseList when criteria changes
-    useEffect(() => { sortCourses(); }, [sort]);
-
-    // Lightbox for creating courses
-    const [ showLightbox, setShowLightbox ] = useState(false);
+    useEffect(() => { sortCourses(); }, [sortCriteria]);
 
 
     return (
+
         <div className="content">
+
             <h1>Courses</h1>
+
             <select name="select-sort" id="select-sort" onChange={event => setSortCriteria(event.target.value)}>
                 <option value="name">Name</option>
                 <option value="grade">Grade</option>
                 <option value="assignments">Assignments</option>
             </select>
+
             {listToJSX(courseList)}
+
             <button onClick={() => setShowLightbox(true)}>Create Course</button>
             {showLightbox && <ModifyCourse close={() => setShowLightbox(false)} method="create" setUser={props.setUser} />}
+                
         </div>
     );
 };
