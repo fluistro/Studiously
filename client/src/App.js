@@ -8,6 +8,7 @@ import Signup from './components/authentication/Signup';
 import Home from './components/home/Home';
 import Dashboard from './components/home/Dashboard';
 import CourseList from './components/home/CourseList';
+import Course from './components/home/Course';
 
 const router = createBrowserRouter([
 
@@ -37,7 +38,11 @@ const router = createBrowserRouter([
       {
         path: "/home/courses",
         element: <CourseList />,
-      }
+      },
+      {
+        path: "/home/courses/:id",
+        element: <Course />,
+      },
     ],
   }
 
