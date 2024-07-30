@@ -1,6 +1,6 @@
 // Component for accepting input to create/edit a course
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createCourse, editCourse } from "../../connection/courses";
 
 // method: "create" or "edit"
@@ -64,7 +64,7 @@ export default function ModifyCourse({ close, method, setUser }) {
 
                     <button onClick={() => close()} id="cancel-button">Cancel</button>
                     <button onClick={onSubmit} id="submit-button"><b>Create course</b></button>
-                    
+
                 </div>
 
             </div>

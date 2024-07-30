@@ -28,7 +28,9 @@ export const getCourses = async () => {
             credentials: 'include'
         });
     
-        return await res.json();
+        const data = await res.json();
+        console.log(data);
+        return data;
         
     } catch (error) {
         console.log(`Error retrieving courses: ${error}`);
@@ -43,6 +45,8 @@ export const getCourses = async () => {
  */
 export const getCourse = async (course_id) => {
     try {
+
+        console.log(course_id)
 
         const res = await fetch(`${route}/${course_id}`, {
             credentials: 'include'
@@ -62,7 +66,12 @@ export const getCourse = async (course_id) => {
  * @returns {Promise<void|Error>}
  */
 export const createCourse = async course => {
-
+    return {
+        name: "TEST",
+        manuallyEnterGrade: true,
+        grade: 90,
+        assignments: []
+    }
 }
 
 

@@ -22,7 +22,7 @@ function listToJSX(courses) {
 }
 
 
-export default function CourseList(props) {
+export default function CourseList({ setUser }) {
 
     /*
     One of:
@@ -31,16 +31,14 @@ export default function CourseList(props) {
     - assignments (# of)
     */
     const [ sortCriteria, setSortCriteria ] = useState("name");
-    const [ courseList, setCourseList ] = useState(null);
+    const [ courseList, setCourseList ] = useState();
 
     // Lightbox for creating courses
     const [ showLightbox, setShowLightbox ] = useState(false);
 
-    // Function for sorting courseList based on criteria
-    async function sortCourses() {
-
-        // Get course list from API if it hasn't been fetched already
-        if (typeof courseList === "null") {
+    // Initialize courseList with fetch request on first render
+    useEffect(() => {
+        async function initializeCourses() {
 
             const data = await getCourses();
 
@@ -49,7 +47,7 @@ export default function CourseList(props) {
                 console.log(data.error);
 
                 // Session expired before logging out
-                if (data.error === "Not currently logged in") props.setUser(undefined);
+                if (data.error === "Not currently logged in") setUser(undefined);
 
             } else {
                 setCourseList(data);
@@ -57,7 +55,14 @@ export default function CourseList(props) {
 
         }
 
+        initializeCourses();
+    }, [setUser]);
+
+    // Function for sorting courseList based on criteria
+    async function sortCourses() {
+
         // Create a shallow copy of courseList and sort it
+        console.log(`Course list: ${courseList}`)
         const newCourseList = [ ...courseList ];
 
         switch(sortCriteria) {
@@ -89,8 +94,10 @@ export default function CourseList(props) {
 
     }
 
-    // Update courseList when criteria changes
-    useEffect(() => { sortCourses(); }, [sortCriteria]);
+    function updateSort(event) {
+        setSortCriteria(event.target.value);
+        sortCourses();
+    }
 
 
     return (
@@ -99,7 +106,7 @@ export default function CourseList(props) {
 
             <h1>Courses</h1>
 
-            <select name="select-sort" id="select-sort" onChange={event => setSortCriteria(event.target.value)}>
+            <select name="select-sort" id="select-sort" onChange={updateSort}>
                 <option value="name">Name</option>
                 <option value="grade">Grade</option>
                 <option value="assignments">Assignments</option>
@@ -108,8 +115,8 @@ export default function CourseList(props) {
             {listToJSX(courseList)}
 
             <button onClick={() => setShowLightbox(true)}>Create Course</button>
-            {showLightbox && <ModifyCourse close={() => setShowLightbox(false)} method="create" setUser={props.setUser} />}
-                
+            {showLightbox && <ModifyCourse close={() => setShowLightbox(false)} method="create" setUser={setUser} />}
+
         </div>
     );
 };
