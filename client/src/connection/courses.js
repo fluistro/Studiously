@@ -7,7 +7,8 @@ const route = "http://localhost:5000/api/courses";
  * @property {string} [_id] - Course ID, if the course is already in MongoDB
  * @property {string} name - The name of the course
  * @property {bool} manuallyEnterGrade - Whether the grade should be manually entered or calculated
- * @property {number} [grade] - Course grade, between 0 and 100
+ * @property {number} [grade] - Manually entered course grade, between 0 and 100
+ * @property {number} [gradeFromAssignments] - Course grade calculated from assignments
  * @property {[string]} assignments - List of assignment ids
  */
 
@@ -22,6 +23,9 @@ const route = "http://localhost:5000/api/courses";
  * @return {Promise<[Course]|Error>} - A list of all the user's courses, or an object with an error field
  */
 export const getCourses = async () => {
+
+    console.log("Called getCourses");
+
     try {
 
         const res = await fetch(`${route}/`, {
@@ -44,6 +48,9 @@ export const getCourses = async () => {
  * @return {Promise<Course|Error>} - The requested course, or an object with an error field
  */
 export const getCourse = async (course_id) => {
+
+    console.log(`called getCourse with id ${course_id}`);
+
     try {
 
         console.log(course_id)
@@ -66,12 +73,9 @@ export const getCourse = async (course_id) => {
  * @returns {Promise<void|Error>}
  */
 export const createCourse = async course => {
-    return {
-        name: "TEST",
-        manuallyEnterGrade: true,
-        grade: 90,
-        assignments: []
-    }
+
+    console.log(`Called createCourse with body ${course}`)
+
 }
 
 
@@ -82,6 +86,8 @@ export const createCourse = async course => {
  */
 export const editCourse = async course => {
 
+    console.log(`Called editCourse with body ${course}`)
+
 }
 
 
@@ -91,5 +97,7 @@ export const editCourse = async course => {
  * @returns {Promise<void|Error>}
  */
 export const deleteCourse = async course_id => {
+
+    console.log(`Called deleteCourse with course_id ${course_id}`)
 
 }

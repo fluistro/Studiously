@@ -12,6 +12,8 @@ const route = "http://localhost:5000/api/auth";
  */
 export const signup = async user => {
 
+    console.log(`Called signup with user ${user}`)
+
     try {
 
         const res = await fetch(`${route}/signup`, {
@@ -43,6 +45,8 @@ export const signup = async user => {
  */
 export const login = async user => {
 
+    console.log(`Called login with user ${user}`)
+
     try {
 
         const res = await fetch(`${route}/login`, {
@@ -68,6 +72,8 @@ export const login = async user => {
  */
 export const logout = async () => {
 
+    console.log(`Called logout`)
+
     try {
 
         await fetch(`${route}/logout`, {
@@ -88,6 +94,9 @@ export const logout = async () => {
  * @returns {Promise<Object|undefined>} - Username and user_id of the current user, or undefined if not logged in.
  */
 export const getCurrentUser = async () => {
+
+    console.log("called getCurrentUser")
+
     try {
 
         const res = await fetch(`${route}/`, {

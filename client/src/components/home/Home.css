@@ -28,7 +28,9 @@
 }
 
 .list-block {
-    background-color: #CCCADE;
+    background-color: #d7d6e2;
+    box-shadow: 1px 1px 1px 1px #282c34;
+    border-radius: 2px;
 
     height: 50px;
     margin: 20px;
