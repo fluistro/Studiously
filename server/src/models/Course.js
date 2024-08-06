@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const CourseSchema = new mongoose.Schema({
 
     name: {
@@ -7,20 +8,18 @@ const CourseSchema = new mongoose.Schema({
         required: true,
     },
 
-    grade: Number,
-    manuallyEnterGrade: {
-        type: Boolean,
+    // Array of assignment ids
+    assignments: {
+        type: [mongoose.SchemaTypes.ObjectId],
         required: true,
     },
 
-    // Array of assignment ids
-    assignments: [mongoose.SchemaTypes.ObjectId]
+    // Date created
+    dateCreated: {
+        type: Date,
+        required: true,
+    },
 
-});
-
-// Make empty courses array if none exists
-CourseSchema.pre("save", function() {
-    if (typeof this.assignments == "undefined") this.assignments = [];
 });
 
 const Course = mongoose.model('Course', CourseSchema);

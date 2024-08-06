@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 const { hashSync, compareSync } = bcrypt;
 
+
 // Error messages
 export const errors = {
     USER_NOT_FOUND: "user not found",
@@ -25,18 +26,16 @@ const UserSchema = new mongoose.Schema({
     },
 
     // Array of course ids
-    courses: [mongoose.SchemaTypes.ObjectId],
+    courses: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        required: true,
+    },
 
 });
 
+// Encrypt password before saving
 UserSchema.pre("save", async function() {
-
-    // Encrypt password before saving
     if (this.isModified("password")) this.password = hashSync(this.password, 10);
-
-    // Make empty courses array if none exists
-    if (typeof this.courses == "undefined") this.courses = [];
-    
 });
 
 // Return true if plaintext password is correct

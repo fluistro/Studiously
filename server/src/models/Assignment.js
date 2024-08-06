@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const AssignmentSchema = new mongoose.Schema({
 
     name: {
@@ -7,20 +8,24 @@ const AssignmentSchema = new mongoose.Schema({
         required: true,
     },
 
-    // "complete", "in progress", "to do"
-    status: {
-        type: String,
+    isCompleted: {
+        type: Boolean,
         required: true,
     },
 
-    due: Date,
-    weight: Number,
-    grade: Number,
+    dueDate: {
+        type: Date,
+        required: true,
+    },
 
-});
+    dateCreated: {
+        type: Date,
+        required: true,
+    },
 
-CourseSchema.pre("save", function() {
-    if (typeof this.status == "undefined") this.status = "to do";
+    weight: Number, // 0-100
+    grade: Number, // 0-100
+
 });
 
 const Assignment = mongoose.model('Assignment', AssignmentSchema);
