@@ -28,8 +28,8 @@ CourseRouter.get("/", async (req, res) => {
         const user = await User.findById(req.user_id);
         if (!user) throw new Error("User not found");
 
-        let courses = user.courses;
-        let result = [];
+        let courses = user.courses; // List of ids
+        let result = []; // To send as response
 
         for (let i = 0; i < courses.length; i++) {
             const courseInfo = await Course.findById(courses[i]);
