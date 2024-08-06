@@ -1,18 +1,32 @@
 // API requests for user authentication (login, signup, etc.)
 const route = "http://localhost:5000/api/auth";
 
+
+/**
+ * @typedef AuthInfo - Information needed to authenticate a user
+ * 
+ * @property {string} username
+ * @property {string} password - The plaintext password
+ */
+
+/**
+ * @typedef User - Basic information about a user
+ * 
+ * @property {string} user_id - ObjectID from MongoDB
+ * @property {string} username
+ */
+
+
 /**
  * Sign up a new user.
  * 
- * @param {Object} user - The user being signed up.
- * @param {string} user.username - The user's username.
- * @param {string} user.password - The user's plaintext password.
+ * @param {AuthInfo} info - Newly created authentication info.
  * 
- * @returns {Promise<Object>} - Contains either an error field, or username and user_id fields.
+ * @returns {Promise<User>} - Username and id of the new user (if created successfully).
  */
 export const signup = async user => {
 
-    console.log(`Called signup with user ${user}`)
+    console.log(`Called signup with user ${user}`);
 
     try {
 
@@ -29,6 +43,7 @@ export const signup = async user => {
         
     } catch (error) {
         console.log(`Error signing up: ${error}`);
+        throw error;
     }
 
 }
@@ -37,15 +52,13 @@ export const signup = async user => {
 /**
  * Log in.
  * 
- * @param {Object} user - The user being logged in.
- * @param {string} user.username - The user's username.
- * @param {string} user.password - The user's plaintext password.
+ * @param {AuthInfo} info - Authentication info for the user to be logged in.
  * 
- * @returns {Promise<Object>} - Contains either an error field, or username and user_id fields.
+ * @returns {Promise<User>} - If login successful, return username and id.
  */
 export const login = async user => {
 
-    console.log(`Called login with user ${user}`)
+    console.log(`Called login with user ${user}`);
 
     try {
 
@@ -62,6 +75,7 @@ export const login = async user => {
         
     } catch (error) {
         console.log(`Error logging in: ${error}`);
+        throw error;
     }
 
 }
@@ -72,7 +86,7 @@ export const login = async user => {
  */
 export const logout = async () => {
 
-    console.log(`Called logout`)
+    console.log(`Called logout`);
 
     try {
 
@@ -83,6 +97,7 @@ export const logout = async () => {
         
     } catch (error) {
         console.log(`Error logging out: ${error}`);
+        throw error;
     }
 
 }
@@ -91,11 +106,11 @@ export const logout = async () => {
 /**
  * Get information of the currently logged in user.
  * 
- * @returns {Promise<Object|undefined>} - Username and user_id of the current user, or undefined if not logged in.
+ * @returns {Promise<User|undefined>} - Username and user_id of the current user, or undefined if not logged in.
  */
 export const getCurrentUser = async () => {
 
-    console.log("called getCurrentUser")
+    console.log("called getCurrentUser");
 
     try {
 
@@ -107,6 +122,7 @@ export const getCurrentUser = async () => {
         
     } catch (error) {
         console.log(`Error authenticating user: ${error}`);
+        throw error;
     }
     
 }
