@@ -2,9 +2,15 @@
 import express from "express";
 import User from "../models/User.js";
 
+
 const AuthRouter = express.Router();
 
-// Sign up, update MongoDB
+/**
+ * Sign up a new user. Does not perform validation.
+ * 
+ * Requires: username, (plaintext) password
+ * Response: username and userId, or an error message
+ */
 AuthRouter.post("/signup", async (req, res) => {
 
     try {
@@ -12,94 +18,139 @@ AuthRouter.post("/signup", async (req, res) => {
         // Username and password validation
         const { username, password } = req.body;
         if (!username || !password) {
-            throw new Error("Missing username or password");
+            return res.status(400).send({
+                message: "Missing username or password"
+            });
         }
-
-        // Add more validation here
-
 
         // Check if username is taken
         const user = await User.findOne({ username });
-        if (user) throw new Error("Username already taken");
+        if (user) {
+            return res.status(409).send({
+                message: "Username already taken"
+            });
+        }
 
         // Save new user to MongoDB
-        const newUser = new User({ username, password });
+        const newUser = new User({ username, password, courses: [] });
         await newUser.save();
 
         // Send id and username as response
-        res.send({ user_id: newUser.id, username });
+        return res.status(201).send({ userId: newUser.id, username });
 
     } catch(error) {
-        res.status(400).send({
-            "error": error.message
+        return res.status(500).send({
+            message: error.message
         });
     }
     
 });
 
-// Login, create user session
+/**
+ * Log in a user.
+ * 
+ * Requires: username, (plaintext) password
+ * Response: username and userId, or an error message
+ */
 AuthRouter.post("/login", async (req, res) => {
 
     try {
 
         // Check if a user is already logged in
-        if (req.session.user) throw new Error("User session already exists");
+        if (req.session.user) {
+            return res.status(409).send({
+                message: "User session already exists"
+            });
+        }
 
         // Username and password validation
         const { username, password } = req.body;
         if (!username || !password) {
-            throw new Error("Missing username or password");
+            return res.status(400).send({
+                message: "Missing username or password"
+            });
         }
 
         // Search for username and password in MongoDB
         const user = await User.findOne({ username });
-        if (!user) throw new Error("Username not found");
-        if (!user.passwordMatches(password)) throw new Error("Incorrect password");
+        if (!user) {
+            return res.status(404).send({
+                message: "Username not found"
+            });
+        }
+        if (!user.passwordMatches(password)) {
+            return res.status(401).send({
+                message: "Incorrect password"
+            });
+        }
         
         // Send user information and update session
         const userInfo = {
             username: user.username,
-            user_id: user._id
+            userId: user._id
         }
         req.session.user = userInfo;
-        res.send(req.session.user);
+        return res.status(200).send(req.session.user);
 
     } catch(error) {
-        res.status(400).send({
-            "error": error.message
+        return res.status(500).send({
+            message: error.message
         });
     }
 
 });
 
-// Logout, delete current user session 
+/**
+ * Log out the current user.
+ * 
+ * Response: none
+ */
 AuthRouter.delete("/logout", (req, res) => {
 
     const session = req.session;
 
     try {
 
-        const user = session.user; // To send back
+        const user = session.user;
+        if (!user) {
+            return res.status(204).send();
+        }
 
         // Destroy current user session
         session.destroy(err => {
             if (err) throw (err);
             res.clearCookie(process.env.SESSION_NAME);
-            res.send(user);
+            return res.status(204).send();
         });
 
-    } catch (err) {
-        res.status(422).send(err);
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message
+        });
     }
 
 });
 
-// Respond with username and user_id if logged in, and undefined if not
+/**
+ * Get the currently logged in user.
+ * 
+ * Response: either 200 with the username and user id, or 204 with no body.
+ */
 AuthRouter.get("/", (req, res) => {
-    //console.log(req.session);
-    const user = req.session.user;
-    if (user) res.send(user);
-    else res.send({user: undefined});
+
+    try {
+
+        const user = req.session.user;
+
+        if (user) return res.status(200).send(user);
+        else return res.status(204).send();
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message
+        });
+    }
+    
 });
 
 export default AuthRouter;

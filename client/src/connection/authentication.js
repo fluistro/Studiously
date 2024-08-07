@@ -12,7 +12,7 @@ const route = "http://localhost:5000/api/auth";
 /**
  * @typedef User - Basic information about a user
  * 
- * @property {string} user_id - ObjectID from MongoDB
+ * @property {string} userId - ObjectID from MongoDB
  * @property {string} username
  */
 
@@ -20,17 +20,18 @@ const route = "http://localhost:5000/api/auth";
 /**
  * Sign up a new user.
  * 
- * @param {AuthInfo} info - Newly created authentication info.
+ * @param {AuthInfo} user - Newly created authentication info.
  * 
  * @returns {Promise<User>} - Username and id of the new user (if created successfully).
  */
 export const signup = async user => {
 
+    // For testing
     console.log(`Called signup with user ${user}`);
 
     try {
 
-        const res = await fetch(`${route}/signup`, {
+        const response = await fetch(`${route}/signup`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -38,12 +39,17 @@ export const signup = async user => {
             credentials: 'include',
             body: JSON.stringify(user)
         });
+
+        if (!response.ok) {
+            const { message } = await res.json();
+            throw new Error(message);
+        }
     
         return await res.json();
         
     } catch (error) {
         console.log(`Error signing up: ${error}`);
-        throw error;
+        throw error; // Propogate error forward
     }
 
 }
@@ -52,17 +58,19 @@ export const signup = async user => {
 /**
  * Log in.
  * 
- * @param {AuthInfo} info - Authentication info for the user to be logged in.
+ * @param {AuthInfo} user - Authentication info for the user to be logged in.
+ * @param {function():void} [onSessionExists] - Callback to run if a user session already exists.
  * 
  * @returns {Promise<User>} - If login successful, return username and id.
  */
-export const login = async user => {
+export const login = async (user, onSessionExists) => {
 
+    // For testing
     console.log(`Called login with user ${user}`);
 
     try {
 
-        const res = await fetch(`${route}/login`, {
+        const response = await fetch(`${route}/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -70,12 +78,24 @@ export const login = async user => {
             credentials: 'include',
             body: JSON.stringify(user)
         });
+
+        if (!response.ok) {
+
+            // Check if session already exists
+            if (onSessionExists && response.status === 409) {
+                return onSessionExists();
+            }
+
+            const { message } = await res.json();
+            throw new Error(message);
+
+        }
     
         return await res.json();
         
     } catch (error) {
         console.log(`Error logging in: ${error}`);
-        throw error;
+        throw error; // Propogate error forward
     }
 
 }
@@ -86,18 +106,24 @@ export const login = async user => {
  */
 export const logout = async () => {
 
+    // For testing
     console.log(`Called logout`);
 
     try {
 
-        await fetch(`${route}/logout`, {
+        const response = await fetch(`${route}/logout`, {
             method: "DELETE",
             credentials: 'include'
         });
+
+        if (!response.ok) {
+            const { message } = await res.json();
+            throw new Error(message);
+        }
         
     } catch (error) {
         console.log(`Error logging out: ${error}`);
-        throw error;
+        throw error; // Propogate error forward
     }
 
 }
@@ -110,19 +136,28 @@ export const logout = async () => {
  */
 export const getCurrentUser = async () => {
 
+    // For testing
     console.log("called getCurrentUser");
 
     try {
 
-        const res = await fetch(`${route}/`, {
+        const response = await fetch(`${route}/`, {
             credentials: 'include'
         });
-        const data = await res.json();
-        if (data.user_id) return data;
+        
+        if (!response.ok) {
+            const { message } = await res.json();
+            throw new Error(message);
+        }
+
+        // Return user information if it is present in the response object
+        if (response.status === 200) {
+            return await res.json();
+        }
         
     } catch (error) {
         console.log(`Error authenticating user: ${error}`);
-        throw error;
+        throw error; // Propogate error forward
     }
     
 }
