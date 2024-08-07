@@ -59,7 +59,7 @@ AssignmentRouter.get("/", async (req, res) => {
         }
 
         const assignments = await Assignment.find({ _id: { $in: assignmentIds }});
-        res.status(200).send(assignments);
+        return res.status(200).send(assignments);
 
     } catch (error) {
         return res.status(500).send({
@@ -242,17 +242,18 @@ AssignmentRouter.put("/edit/:assignmentId", async (req, res) => {
 
 
 /**
- * Delete an assignment, given the assignment id.
+ * Delete an assignment, given the course and assignment id.
  * 
  * Response: none
  */
-AssignmentRouter.delete("/delete/:assignmentId", async (req, res) => {
+AssignmentRouter.delete("/delete/:courseId/:assignmentId", async (req, res) => {
 
     try {
 
+        const courseId = mongoose.Types.ObjectId(req.params.courseId);
         const assignmentId = mongoose.Types.ObjectId(req.params.assignmentId);
 
-        // Ensure that the current user is authorized to edit this assignment
+        // Ensure that the current user is authorized to edit this course
 
         const user = await User.findById(req.userId);
         if (!user) {
@@ -261,36 +262,39 @@ AssignmentRouter.delete("/delete/:assignmentId", async (req, res) => {
             });
         }
 
-        // Get all assignment ids
+        if (!user.courses.includes(courseId)) {
+            return res.status(401).send({
+                message: "Course does not belong to user"
+            });
+        }
 
-        const courseIds = user.courses;
-        const courseInfo = await Course.find({ _id: { $in: courseIds } });
-        
-        if (courseInfo.length !== courseIds.length) {
+        // Remove assignment from course
+        const updateInfo = await Course.updateOne(
+            { _id: courseId },
+            { $pull: { assignments: assignmentId } }
+        );
+        if (updateInfo.matchedCount === 0) {
             return res.status(404).send({
                 message: "Course not found"
             });
         }
-
-        let assignmentIds = [];
-        for (let i = 0; i < courseInfo.length; i++) {
-            assignmentIds.push(...courseInfo[i].assignments);
-        }
-
-        if (!assignmentIds.includes(assignmentId)) {
+        if (updateInfo.modifiedCount === 0) {
             return res.status(401).send({
-                message: "Assignment id does not belong to current user"
+                message: "Assignment does not belong to course"
             });
         }
 
         // Delete assignment
-
         const deleteInfo = Assignment.deleteOne(
             { _id: assignmentId }
         );
-        if (deleteInfo.deletedCount !== 1) throw new Error("Assignment not found");
+        if (deleteInfo.deletedCount !== 1) {
+            return res.status(404).send({
+                message: "Assignment not found"
+            });
+        }
 
-        res.status(204).send();
+        return res.status(204).send();
         
     } catch (error) {
         return res.status(500).send({
@@ -299,3 +303,6 @@ AssignmentRouter.delete("/delete/:assignmentId", async (req, res) => {
     }
 
 });
+
+
+export default AssignmentRouter;
