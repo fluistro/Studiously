@@ -33,10 +33,10 @@ export const getAssignments = async onUnauthorized => {
         if (!response.ok) {
 
             if (response.status === 401) {
-                return onUnauthorized();
+                onUnauthorized();
             }
 
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
 
@@ -69,10 +69,10 @@ export const getCourseAssignments = async (onUnauthorized, courseId) => {
         if (!response.ok) {
 
             if (response.status === 401) {
-                return onUnauthorized();
+                onUnauthorized();
             }
 
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
 
@@ -115,10 +115,10 @@ export const createAssignment = async (courseId, assignmentInfo, onUnauthorized)
         if (!response.ok) {
 
             if (response.status === 401) {
-                return onUnauthorized();
+                onUnauthorized();
             }
 
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
         
@@ -159,10 +159,10 @@ export const editAssignment = async (courseId, assignmentId, assignmentInfo, onU
         if (!response.ok) {
 
             if (response.status === 401) {
-                return onUnauthorized();
+                onUnauthorized();
             }
 
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
         
@@ -192,10 +192,10 @@ export const deleteAssignment = async (courseId, assignmentId, onUnauthorized) =
         if (!response.ok) {
 
             if (response.status === 401) {
-                return onUnauthorized();
+                onUnauthorized();
             }
 
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
         

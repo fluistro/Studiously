@@ -83,7 +83,7 @@ export const login = async (user, onSessionExists) => {
 
             // Check if session already exists
             if (response.status === 409) {
-                return onSessionExists();
+                onSessionExists();
             }
 
             const { message } = await res.json();
