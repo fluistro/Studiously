@@ -59,7 +59,7 @@ export const signup = async user => {
  * Log in.
  * 
  * @param {AuthInfo} user - Authentication info for the user to be logged in.
- * @param {function():void} [onSessionExists] - Callback to run if a user session already exists.
+ * @param {function():void} onSessionExists - Callback to run if a user session already exists.
  * 
  * @returns {Promise<User>} - If login successful, return username and id.
  */
@@ -82,7 +82,7 @@ export const login = async (user, onSessionExists) => {
         if (!response.ok) {
 
             // Check if session already exists
-            if (onSessionExists && response.status === 409) {
+            if (response.status === 409) {
                 return onSessionExists();
             }
 

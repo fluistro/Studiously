@@ -1,3 +1,5 @@
+// API requests to /assignments endpoint
+const route = "http://localhost:5000/api/assignments";
 
 
 /**
@@ -16,10 +18,34 @@
 
 /**
  * Retrieve all assignments for the current user.
+ * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @returns {Promise<[Assignment]>}
  */
-export const getAssignments = async () => {
+export const getAssignments = async onUnauthorized => {
+
+    try {
+
+        const response = await fetch(`${route}/`, {
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+
+            if (response.status === 401) {
+                return onUnauthorized();
+            }
+
+            const { message } = await res.json();
+            throw new Error(message);
+        }
+
+        return await response.json();
+        
+    } catch (error) {
+        console.log(`Error from getAssignments: ${error}`);
+        throw error;
+    }
 
 }
 
@@ -28,23 +54,34 @@ export const getAssignments = async () => {
  * Retrieve all assignments for a given course.
  * 
  * @param {string} courseId 
+ * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @returns {Promise<[Assignment]>}
  */
-export const getCourseAssignments = async courseId => {
+export const getCourseAssignments = async (onUnauthorized, courseId) => {
 
-    return [
-        {
-            _id: 0,
-            name: "A1",
-            weight: 15,
-        },
-        {
-            _id: 0,
-            name: "A2",
-            weight: 10,
-        },
-    ]
+    try {
+
+        const response = await fetch(`${route}/${courseId}`, {
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+
+            if (response.status === 401) {
+                return onUnauthorized();
+            }
+
+            const { message } = await res.json();
+            throw new Error(message);
+        }
+
+        return await response.json();
+        
+    } catch (error) {
+        console.log(`Error from getCourseAssignments: ${error}`);
+        throw error;
+    }
 
 } 
 
@@ -52,6 +89,7 @@ export const getCourseAssignments = async courseId => {
 /**
  * 
  * @param {string} courseId - ID of the course that this assignment belongs to
+ * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @param {Object} assignmentInfo 
  * @param {string} assignmentInfo.name - Name of the new assignment
@@ -61,13 +99,40 @@ export const getCourseAssignments = async courseId => {
  * 
  * @returns {Promise<void>}
  */
-export const createAssignment = async (courseId, assignmentInfo) => {
+export const createAssignment = async (courseId, assignmentInfo, onUnauthorized) => {
+
+    try {
+
+        const response = await fetch(`${route}/${courseId}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: "include",
+            body: JSON.stringify(assignmentInfo),
+        });
+
+        if (!response.ok) {
+
+            if (response.status === 401) {
+                return onUnauthorized();
+            }
+
+            const { message } = await res.json();
+            throw new Error(message);
+        }
+        
+    } catch (error) {
+        console.log(`Error creating assignment: ${error}`);
+        throw error;
+    }
 
 }
 
 
 /**
  * @param {string} assignmentId
+ * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @param {Object} assignmentInfo 
  * @param {string} assignmentInfo.name
@@ -78,17 +143,65 @@ export const createAssignment = async (courseId, assignmentInfo) => {
  * 
  * @returns {Promise<void>}
  */
-export const editAssignment = async (assignmentId, assignmentInfo) => {
+export const editAssignment = async (courseId, assignmentId, assignmentInfo, onUnauthorized) => {
+
+    try {
+
+        const response = await fetch(`${route}/${courseId}/${assignmentId}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: "include",
+            body: JSON.stringify(assignmentInfo),
+        });
+
+        if (!response.ok) {
+
+            if (response.status === 401) {
+                return onUnauthorized();
+            }
+
+            const { message } = await res.json();
+            throw new Error(message);
+        }
+        
+    } catch (error) {
+        console.log(`Error editing assignment: ${error}`);
+        throw error;
+    }
 
 }
 
 
 /**
- * 
- * @param {string} assignmentId - ID of the assignment to delete
+ * @param {string} assignmentId
+ * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @returns {Promise<void>}
  */
-export const deleteAssignment = async assignmentId => {
+export const deleteAssignment = async (courseId, assignmentId, onUnauthorized) => {
+
+    try {
+
+        const response = await fetch(`${route}/${courseId}/${assignmentId}`, {
+            method: "DELETE",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+
+            if (response.status === 401) {
+                return onUnauthorized();
+            }
+
+            const { message } = await res.json();
+            throw new Error(message);
+        }
+        
+    } catch (error) {
+        console.log(`Error deleting assignment: ${error}`);
+        throw error;
+    }
 
 }
