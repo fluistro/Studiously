@@ -9,19 +9,26 @@ import Course from "../models/Course.js";
 const CourseRouter = express.Router();
 
 // Middleware to ensure user is authenticated
-CourseRouter.use((req, res, next) => {
+CourseRouter.use(async (req, res, next) => {
 
     const currentUser = req.session.user;
-
     if (!currentUser) {
         return res.status(401).send({ 
             message: "Not currently logged in" 
         });
-    } else {
-        req.userId = currentUser.userId;
-        next();
     }
 
+    const user = await User.findById(currentUser.userId);
+    if (!user) {
+        return res.status(404).send({
+            message: "User not found"
+        });
+    }
+
+    req.userId = currentUser.userId;
+    req.user = user;
+    next();
+    
 });
 
 /**
@@ -32,16 +39,8 @@ CourseRouter.use((req, res, next) => {
 CourseRouter.get("/", async (req, res) => {
 
     try {
-        
-        // Get user
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).send({
-                message: "User not found"
-            });
-        }
 
-        const courseIds = user.courses;
+        const courseIds = req.user.courses;
         const courseInfo = await Course.find({ _id: { $in: courseIds } });
         
         if (courseInfo.length !== courseIds.length) {
@@ -71,17 +70,10 @@ CourseRouter.get("/:courseId", async (req, res) => {
 
         const courseId = mongoose.Types.ObjectId(req.params.courseId);
 
-        // Check that user exists and has the requested course
-        
-        const user = await User.findById(req.user_id);
-        if (!user) {
+        // Check that user exists has the requested course
+        if (!req.user.courses.includes(courseId)) {
             return res.status(404).send({
-                message: "User not found"
-            });
-        }
-        if (!user.courses.includes(courseId)) {
-            return res.status(401).send({
-                message: "Course not in user course list"
+                message: "Course not found in user info"
             });
         }
 
@@ -109,7 +101,7 @@ CourseRouter.get("/:courseId", async (req, res) => {
  * Requires: name
  * Response: id of the newly created course.
  */
-CourseRouter.post("/create", async (req, res) => {
+CourseRouter.post("/", async (req, res) => {
 
     try {
         
@@ -117,15 +109,7 @@ CourseRouter.post("/create", async (req, res) => {
         const { name } = req.body;
         if (!name) {
             return res.status(400).send({
-                message: "Missing course name"
-            });
-        }
-
-        // Get user
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).send({
-                message: "User not found"
+                message: "Request missing fields"
             });
         }
 
@@ -139,7 +123,7 @@ CourseRouter.post("/create", async (req, res) => {
             { $push: { courses: newCourse._id } }
         );
 
-        return res.status(201).send(newCourse._id);
+        return res.status(201).send({ courseId: newCourse._id });
 
     } catch (error) {
         return res.status(500).send({
@@ -163,16 +147,9 @@ CourseRouter.put("/edit/:courseId", async (req, res) => {
 
         // Ensure user is authorized
 
-        const user = await User.findById(req.userId);
-        if (!user) {
+        if (!req.user.courses.includes(courseId)) {
             return res.status(404).send({
-                message: "User not found"
-            });
-        }
-
-        if (!user.courses.includes(courseId)) {
-            return res.status(401).send({
-                message: "Course not found in user course list"
+                message: "Course not found in user info"
             });
         }
 
@@ -180,7 +157,7 @@ CourseRouter.put("/edit/:courseId", async (req, res) => {
         const { name } = req.body;
         if (!name) {
             return res.status(400).send({
-                message: "Missing course name"
+                message: "Request missing fields"
             });
         }
 
@@ -221,14 +198,9 @@ CourseRouter.delete("/:courseId", async (req, res) => {
             { _id: req.userId },
             { $pull: { courses: courseId } }
         );
-        if (updateInfo.matchedCount === 0) {
-            return res.status(404).send({
-                message: "User not found"
-            });
-        }
         if (updateInfo.modifiedCount === 0) {
-            return res.status(401).send({
-                message: "Course does not belong to user"
+            return res.status(404).send({
+                message: "Course not found in user info"
             });
         }
 
@@ -249,5 +221,6 @@ CourseRouter.delete("/:courseId", async (req, res) => {
     }
 
 });
+
 
 export default CourseRouter;

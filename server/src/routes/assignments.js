@@ -10,18 +10,25 @@ import Assignment from "../models/Assignment.js";
 const AssignmentRouter = express.Router();
 
 // Middleware to ensure user is authenticated
-AssignmentRouter.use((req, res, next) => {
+AssignmentRouter.use(async (req, res, next) => {
 
     const currentUser = req.session.user;
-
     if (!currentUser) {
         return res.status(401).send({ 
             message: "Not currently logged in" 
         });
-    } else {
-        req.userId = currentUser.userId;
-        next();
     }
+
+    const user = await User.findById(currentUser.userId);
+    if (!user) {
+        return res.status(404).send({
+            message: "User not found"
+        });
+    }
+
+    req.userId = currentUser.userId;
+    req.user = user;
+    next();
 
 });
 
@@ -33,32 +40,30 @@ AssignmentRouter.use((req, res, next) => {
 AssignmentRouter.get("/", async (req, res) => {
 
     try {
-        
-        // Get user
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).send({
-                message: "User not found"
-            });
-        }
 
-        // Get all assignment ids
-
-        const courseIds = user.courses;
+        // Get all course information
+        const courseIds = req.user.courses;
         const courseInfo = await Course.find({ _id: { $in: courseIds } });
-        
         if (courseInfo.length !== courseIds.length) {
             return res.status(404).send({
                 message: "Course not found"
             });
         }
 
+        // Get all assignment ids
         let assignmentIds = [];
         for (let i = 0; i < courseInfo.length; i++) {
             assignmentIds.push(...courseInfo[i].assignments);
         }
 
+        // Get all assignment info
         const assignments = await Assignment.find({ _id: { $in: assignmentIds }});
+        if (assignments.length !== assignmentIds.length) {
+            return res.status(404).send({
+                message: "Assignment not found"
+            });
+        }
+
         return res.status(200).send(assignments);
 
     } catch (error) {
@@ -79,8 +84,17 @@ AssignmentRouter.get("/:courseId", async (req, res) => {
 
     try {
 
+        const courseId = mongoose.Types.ObjectId(req.params.courseId);
+
+        // Ensure course belongs to user
+        if (!req.user.course.includes(courseId)) {
+            return res.status(404).send({
+                message: "Course not found in user info"
+            });
+        }
+
         // Get course
-        const courseInfo = await Course.findById(req.params.courseId);
+        const courseInfo = await Course.findById(courseId);
         if (!courseInfo) {
             return res.status(404).send({
                 message: "Course not found"
@@ -90,6 +104,12 @@ AssignmentRouter.get("/:courseId", async (req, res) => {
         // Get assignments
         const assignmentIds = courseInfo.assignments;
         const assignments = await Assignment.find({_id: {$in: assignmentIds}});
+        if (assignments.length !== assignmentIds.length) {
+            return res.status(404).send({
+                message: "Assignment not found"
+            });
+        }
+
         res.status(200).send(assignments);
 
     } catch (error) {
@@ -108,38 +128,32 @@ AssignmentRouter.get("/:courseId", async (req, res) => {
  *   - Optional: grade, weight
  * Response: the newly created assignment's id.
  */
-AssignmentRouter.post("/create/:courseId", async (req, res) => {
+AssignmentRouter.post("/:courseId", async (req, res) => {
 
     try {
+
+        const courseId = mongoose.Types.ObjectId(req.params.courseId);
 
         // Ensure the required info was sent
         const { name, dueDate, grade, weight } = req.body;
         if (!name || !dueDate) {
             return res.status(400).send({
-                message: "Missing assignment name or due date"
+                message: "Request body missing fields"
             });
         }
-
-        // Get user
-        const user = await User.findById(req.userId);
-        if (!user) {
+        
+        // Ensure course id belongs to user
+        if (!req.user.courses.includes(courseId)) {
             return res.status(404).send({
-                message: "User not found"
+                message: "Course not found in user info"
             });
         }
 
         // Get course
-        const courseInfo = await Course.findById(req.params.courseId);
+        const courseInfo = await Course.findById(courseId);
         if (!courseInfo) {
             return res.status(404).send({
                 message: "Course not found"
-            });
-        }
-
-        // Ensure course id belongs to user
-        if (!user.courses.includes(courseInfo._id)) {
-            return res.status(401).send({
-                message: "Course id does not belong to current user"
             });
         }
 
@@ -156,11 +170,11 @@ AssignmentRouter.post("/create/:courseId", async (req, res) => {
 
         // Update course's assignment array
         await Course.updateOne(
-            { _id: req.params.courseId },
+            { _id: courseId },
             { $push: { assignments: newAssignment._id } }
         );
 
-        return res.status(201).send(newAssignment._id);
+        return res.status(201).send({ assignmentId: newAssignment._id });
 
     } catch (error) {
         return res.status(500).send({
@@ -178,45 +192,14 @@ AssignmentRouter.post("/create/:courseId", async (req, res) => {
  *   - Optional: grade, weight
  * Response: none
  */
-AssignmentRouter.put("/edit/:assignmentId", async (req, res) => {
+AssignmentRouter.put("/:courseId/:assignmentId", async (req, res) => {
 
     try {
 
+        const courseId = mongoose.Types.ObjectId(req.params.courseId);
         const assignmentId = mongoose.Types.ObjectId(req.params.assignmentId);
 
-        // Ensure that the current user is authorized to edit this assignment
-
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).send({
-                message: "User not found"
-            });
-        }
-
-        // Get all assignment ids
-
-        const courseIds = user.courses;
-        const courseInfo = await Course.find({ _id: { $in: courseIds } });
-        
-        if (courseInfo.length !== courseIds.length) {
-            return res.status(404).send({
-                message: "Course not found"
-            });
-        }
-
-        let assignmentIds = [];
-        for (let i = 0; i < courseInfo.length; i++) {
-            assignmentIds.push(...courseInfo[i].assignments);
-        }
-
-        if (!assignmentIds.includes(assignmentId)) {
-            return res.status(401).send({
-                message: "Assignment id does not belong to current user"
-            });
-        }
-
-        // Edit assignment
-
+        // Ensure request contains required fields
         const { name, dueDate, isCompleted, grade, weight } = req.body;
         if (!name || !dueDate || typeof isCompleted === "undefined") {
             return res.status(400).send({
@@ -224,11 +207,37 @@ AssignmentRouter.put("/edit/:assignmentId", async (req, res) => {
             });
         }
 
+        // Ensure that the current user is authorized to edit this course and assignment
+
+        if (!req.user.courses.includes(courseId)) {
+            return res.status(404).send({
+                message: "Course not found in user info"
+            });
+        }
+
+        const courseInfo = await Course.findById(courseId);
+        if (!courseInfo) {
+            return res.status(404).send({
+                message: "Course not found"
+            });
+        }
+        if (!courseInfo.assignments.includes(assignmentId)) {
+            return res.status(404).send({
+                message: "Assignment not found in course info"
+            });
+        }
+
+        // Edit assignment
+
         const updateInfo = Assignment.updateOne(
             { _id: assignmentId },
             { name, dueDate, isCompleted, grade, weight }
         );
-        if (updateInfo.matchedCount === 0) throw new Error("Assignment not found");
+        if (updateInfo.matchedCount === 0) {
+            return res.status(404).send({
+                message: "Assignment not found"
+            });
+        }
 
         res.status(204).send();
         
@@ -246,7 +255,7 @@ AssignmentRouter.put("/edit/:assignmentId", async (req, res) => {
  * 
  * Response: none
  */
-AssignmentRouter.delete("/delete/:courseId/:assignmentId", async (req, res) => {
+AssignmentRouter.delete("/:courseId/:assignmentId", async (req, res) => {
 
     try {
 
@@ -255,16 +264,9 @@ AssignmentRouter.delete("/delete/:courseId/:assignmentId", async (req, res) => {
 
         // Ensure that the current user is authorized to edit this course
 
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).send({
-                message: "User not found"
-            });
-        }
-
-        if (!user.courses.includes(courseId)) {
+        if (!req.user.courses.includes(courseId)) {
             return res.status(401).send({
-                message: "Course does not belong to user"
+                message: "Course not found in user info"
             });
         }
 
@@ -280,7 +282,7 @@ AssignmentRouter.delete("/delete/:courseId/:assignmentId", async (req, res) => {
         }
         if (updateInfo.modifiedCount === 0) {
             return res.status(401).send({
-                message: "Assignment does not belong to course"
+                message: "Assignment not found in course info"
             });
         }
 

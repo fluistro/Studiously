@@ -11,6 +11,7 @@ import { PORT, NODE_ENV, MONGO_URI, SESSION_NAME, SESSION_SECRET, SESSION_LIFETI
 // Routers
 import AuthRouter from "./routes/auth.js";
 import CourseRouter from "./routes/courses.js";
+import AssignmentRouter from "./routes/assignments.js";
 
 (async () => {
     try {
@@ -50,6 +51,7 @@ import CourseRouter from "./routes/courses.js";
         const apiRouter = express.Router();
         apiRouter.use("/auth", AuthRouter);
         apiRouter.use("/courses", CourseRouter);
+        apiRouter.use("/assignments", AssignmentRouter);
 
         app.use("/api", apiRouter);
     

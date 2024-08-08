@@ -19,7 +19,7 @@ AuthRouter.post("/signup", async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) {
             return res.status(400).send({
-                message: "Missing username or password"
+                message: "Request body missing fields"
             });
         }
 
@@ -101,11 +101,11 @@ AuthRouter.post("/login", async (req, res) => {
 });
 
 /**
- * Log out the current user.
+ * Log out the current user. Has no effect if there is no current user session.
  * 
  * Response: none
  */
-AuthRouter.delete("/logout", (req, res) => {
+AuthRouter.delete("/", (req, res) => {
 
     const session = req.session;
 
@@ -152,5 +152,6 @@ AuthRouter.get("/", (req, res) => {
     }
     
 });
+
 
 export default AuthRouter;
