@@ -1,5 +1,5 @@
 // API requests for getting course information (once authenticated)
-import { getCourseAssignments } from "./assignments";
+import { validateResponse, calculateGrade } from "./utils";
 
 const route = "http://localhost:5000/api/courses";
 
@@ -15,36 +15,6 @@ const route = "http://localhost:5000/api/courses";
 
 
 /**
- * Calculate the course grade using assignment grades and weights.
- * 
- * @param {string} courseId 
- * @returns {Promise<Number|null>} - Undefined if there are no assignments with both a weight and grade.
- */
-const calculateGrade = async courseId => {
-
-    // Get assignments
-    let assignments = getCourseAssignments(courseId);
-
-    // Get assignments with both a grade and weight
-    assignments.filter(assignment => typeof assignment.grade !== "undefined" && assignment.weight);
-
-    if (assignments.length === 0) return null;
-
-    // Calculate course grade
-    const totalWeight = 0;
-    const totalEarned = 0;
-    for (let i = 0; i < assignments.length; i++) {
-        totalWeight += assignments[i].weight;
-        totalEarned += assignments[i].grade;
-    }
-
-    if (totalWeight === 0) return null;
-    return totalEarned / totalWeight * 100;
-
-}
-
-
-/**
  * Get information about all courses for the current user.
  * 
  * @param {function():void} onUnauthorized - To call if the user is not logged in
@@ -53,25 +23,13 @@ const calculateGrade = async courseId => {
  */
 export const getUserCourses = async onUnauthorized => {
 
-    console.log("Called getCourses");
-
     try {
 
         const response = await fetch(`${route}/`, {
             credentials: 'include'
         });
 
-        if (!response.ok) {
-
-            if (response.status === 401) {
-                onUnauthorized();
-            }
-
-            const { message } = await res.json();
-            throw new Error(message);
-        }
-    
-        const data = await response.json();
+        const data = await validateResponse(response, 401, onUnauthorized);
 
         let courses = [];
         for (let i = 0; i < data.length; i++) {
@@ -90,35 +48,23 @@ export const getUserCourses = async onUnauthorized => {
 
 
 /**
- * @param {string} course_id - The id of the requested course.
+ * @param {string} courseId - The id of the requested course.
  * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @return {Promise<Course>} - Information about the requested course.
  */
-export const getCourse = async (course_id, onUnauthorized) => {
-
-    console.log(`called getCourse with id ${course_id}`);
+export const getCourse = async (courseId, onUnauthorized) => {
 
     try {
 
-        const response = await fetch(`${route}/${course_id}`, {
+        const response = await fetch(`${route}/${courseId}`, {
             credentials: 'include'
         });
 
-        if (!response.ok) {
-
-            if (response.status === 401) {
-                onUnauthorized();
-            }
-
-            const { message } = await response.json();
-            throw new Error(message);
-        }
-
-        const data = await response.json();
-        data.grade = await calculateGrade(data._id);
+        const course = await validateResponse(response, 401, onUnauthorized);
+        course.grade = await calculateGrade(course._id);
     
-        return data;
+        return course;
         
     } catch (error) {
         console.log(`Error retrieving courses: ${error}`);
@@ -148,15 +94,7 @@ export const createCourse = async (courseInfo, onUnauthorized) => {
             body: JSON.stringify(courseInfo)
         });
 
-        if (!response.ok) {
-
-            if (response.status === 401) {
-                onUnauthorized();
-            }
-
-            const { message } = await response.json();
-            throw new Error(message);
-        }
+        await validateResponse(response, 401, onUnauthorized);
         
     } catch (error) {
         console.log(`Error retrieving courses: ${error}`);
@@ -167,7 +105,7 @@ export const createCourse = async (courseInfo, onUnauthorized) => {
 
 
 /**
- * @param {string} course_id
+ * @param {string} courseId
  * 
  * @param {Object} courseInfo
  * @param {string} courseInfo.name
@@ -176,11 +114,11 @@ export const createCourse = async (courseInfo, onUnauthorized) => {
  * 
  * @returns {Promise<void>}
  */
-export const editCourse = async (course_id, courseInfo, onUnauthorized) => {
+export const editCourse = async (courseId, courseInfo, onUnauthorized) => {
 
     try {
 
-        const response = await fetch(`${route}/${course_id}`, {
+        const response = await fetch(`${route}/${courseId}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -189,15 +127,7 @@ export const editCourse = async (course_id, courseInfo, onUnauthorized) => {
             body: JSON.stringify(courseInfo)
         });
 
-        if (!response.ok) {
-
-            if (response.status === 401) {
-                onUnauthorized();
-            }
-
-            const { message } = await response.json();
-            throw new Error(message);
-        }
+        await validateResponse(response, 401, onUnauthorized);
         
     } catch (error) {
         console.log(`Error retrieving courses: ${error}`);
@@ -208,33 +138,21 @@ export const editCourse = async (course_id, courseInfo, onUnauthorized) => {
 
 
 /**
- * @param {string} course_id
+ * @param {string} courseId
  * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
  * @returns {Promise<void>}
  */
-export const deleteCourse = async (course_id, onUnauthorized) => {
+export const deleteCourse = async (courseId, onUnauthorized) => {
 
     try {
 
-        const response = await fetch(`${route}/${course_id}`, {
+        const response = await fetch(`${route}/${courseId}`, {
             method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json'
-            },
             credentials: 'include',
-            body: JSON.stringify(courseInfo)
         });
 
-        if (!response.ok) {
-
-            if (response.status === 401) {
-                onUnauthorized();
-            }
-
-            const { message } = await response.json();
-            throw new Error(message);
-        }
+        await validateResponse(response, 401, onUnauthorized);
         
     } catch (error) {
         console.log(`Error retrieving courses: ${error}`);
