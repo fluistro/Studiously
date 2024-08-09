@@ -21,10 +21,14 @@ export default function CreateCourseForm({ logout, close }) {
     async function onSubmit(event) {
 
         try {
-
+            
             event.preventDefault();
+            
+            if (!name) {
+                setError("Missing course name");
+                return;
+            }
 
-            // If session already exists or the login request is successful, redirect to homepage.
             await createCourse({ name }, logout);
             close();
 
@@ -39,7 +43,6 @@ export default function CreateCourseForm({ logout, close }) {
         close();
     }
 
-    // Redirect to homepage if successful
     return (
 
         <div className="form">

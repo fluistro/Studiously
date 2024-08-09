@@ -26,6 +26,11 @@ export default function LoginForm({}) {
 
             event.preventDefault();
 
+            if (!username || !password) {
+                setError("Missing username or password");
+                return;
+            }
+
             // If session already exists or the login request is successful, redirect to homepage.
             await login({ username, password }, () => { setSuccess(true) });
             setSuccess(true);

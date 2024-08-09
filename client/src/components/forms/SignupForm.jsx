@@ -26,6 +26,11 @@ export default function SignupForm() {
 
             event.preventDefault();
 
+            if (!username || !password) {
+                setError("Missing username or password");
+                return;
+            }
+
             // If the signup request is successful, redirect to homepage.
             await signup({ username, password });
             setSuccess(true);

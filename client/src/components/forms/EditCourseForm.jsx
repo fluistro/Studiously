@@ -3,7 +3,7 @@ import { editCourse } from "../../connection/courses";
 
 
 /**
- * Create course form component. Contains name field.
+ * Edit course form component. Contains name field.
  * 
  * Expects:
  * - Course id to edit
@@ -25,6 +25,11 @@ export default function EditCourseForm({ courseId, logout, close }) {
 
             event.preventDefault();
 
+            if (!name) {
+                setError("Missing course name");
+                return;
+            }
+
             // If session already exists or the login request is successful, redirect to homepage.
             await editCourse(courseId, { name }, logout);
             close();
@@ -40,7 +45,6 @@ export default function EditCourseForm({ courseId, logout, close }) {
         close();
     }
 
-    // Redirect to homepage if successful
     return (
 
         <div className="form">
