@@ -64,7 +64,7 @@ export default function LoginForm({}) {
                            onChange={event => setPassword(event.target.value)}></input>
                     <br/><br/>
                 </form>
-                <button type="submit" onClick={onSubmit} id="submit-button"><b>Log in</b></button>
+                <button type="submit" onClick={onSubmit} className="submit-button"><b>Log in</b></button>
             </div>
 
             <div className="form-footer">

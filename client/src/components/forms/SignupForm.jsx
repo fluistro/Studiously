@@ -36,7 +36,7 @@ export default function SignupForm() {
 
     }
 
-    // Redirect to homepage if successful
+    // Redirect to login if successful
     return (
 
         success ? <Navigate to="/login" /> :
@@ -64,7 +64,7 @@ export default function SignupForm() {
                            onChange={event => setPassword(event.target.value)}></input>
                     <br/><br/>
                 </form>
-                <button type="submit" onClick={onSubmit} id="submit-button"><b>Sign up</b></button>
+                <button type="submit" onClick={onSubmit} className="submit-button"><b>Sign up</b></button>
             </div>
 
             <div className="form-footer">
