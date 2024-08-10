@@ -4,7 +4,7 @@ import LoginForm from "../forms/LoginForm";
 
 export default function LoginPage() {
     return (
-        <div className="background">
+        <div className="form-background">
             <LoginForm />
         </div>
     );

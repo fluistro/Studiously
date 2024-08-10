@@ -41,11 +41,11 @@ export const signup = async user => {
         });
 
         if (!response.ok) {
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
     
-        return await res.json();
+        return await response.json();
         
     } catch (error) {
         console.log(`Error signing up: ${error}`);
@@ -86,12 +86,12 @@ export const login = async (user, onSessionExists) => {
                 onSessionExists();
             }
 
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
 
         }
     
-        return await res.json();
+        return await response.json();
         
     } catch (error) {
         console.log(`Error logging in: ${error}`);
@@ -111,13 +111,13 @@ export const logout = async () => {
 
     try {
 
-        const response = await fetch(`${route}/logout`, {
+        const response = await fetch(`${route}/`, {
             method: "DELETE",
             credentials: 'include'
         });
 
         if (!response.ok) {
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
         
@@ -146,13 +146,13 @@ export const getCurrentUser = async () => {
         });
         
         if (!response.ok) {
-            const { message } = await res.json();
+            const { message } = await response.json();
             throw new Error(message);
         }
 
         // Return user information if it is present in the response object
         if (response.status === 200) {
-            return await res.json();
+            return await response.json();
         }
         
     } catch (error) {

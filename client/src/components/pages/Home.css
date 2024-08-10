@@ -1,3 +1,16 @@
+.form-background {
+
+    background-color: rgba(219, 219, 219, 0.218);
+  
+    height: 100%;
+    width: 100%;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+}
+
 .home-background {
     height: 100%;
     width: 100%;
@@ -17,6 +30,11 @@
     width:300px;
     background-color:#fff;
     position:fixed;
+
+    border: solid black;
+    border-width: 1px;
+    box-shadow: 1px 1px 1px 1px #282c34;
+    border-radius: 4px;
 }
 
 .sidebar-item {

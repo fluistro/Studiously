@@ -18,7 +18,7 @@ export default function SignupForm() {
     const [error, setError] = useState();
 
     // To check if signup was successful
-    const [success, setSuccess] = false;
+    const [success, setSuccess] = useState(false);
 
     // Send signup request when form is submitted
     async function onSubmit(event) {

@@ -1,16 +1,3 @@
-.form-background {
-
-  background-color: rgba(219, 219, 219, 0.218);
-
-  height: 100%;
-  width: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-
 .form {
 
     background-color: #CCCADE;
@@ -49,7 +36,7 @@
   justify-self: start;
 }
 
-#submit-button {
+.submit-button {
 background-color:#a376de;
 height: 40px;
 width: 80px;

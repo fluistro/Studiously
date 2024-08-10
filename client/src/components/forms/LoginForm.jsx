@@ -18,7 +18,7 @@ export default function LoginForm() {
     const [error, setError] = useState();
 
     // To check if login was successful
-    const [success, setSuccess] = false;
+    const [success, setSuccess] = useState(false);
 
     // Send login request when form is submitted
     async function onSubmit(event) {
