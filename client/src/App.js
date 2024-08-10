@@ -3,23 +3,18 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import './App.css';
 
 // Components
-import Login from './components/authentication/Login';
-import Signup from './components/authentication/Signup';
-import Home from './components/home/Home';
-import Dashboard from './components/home/Dashboard';
-import CourseList from './components/home/CourseList';
-import Course from './components/home/Course';
+import { LoginPage, SignupPage, DashboardPage, CourseListPage, CoursePage, Home } from './components/pages/Pages';
 
 const router = createBrowserRouter([
 
   // Authentication
   {
     path: "/login",
-    element: <Login />,
+    element: <LoginPage />,
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: <SignupPage />,
   },
 
   // Home
@@ -33,15 +28,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/home",
-        element: <Dashboard />,
+        element: <DashboardPage />,
       },
       {
         path: "/home/courses",
-        element: <CourseList />,
+        element: <CourseListPage />,
       },
       {
         path: "/home/courses/:course_id",
-        element: <Course />,
+        element: <CoursePage />,
       },
     ],
   }
