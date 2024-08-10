@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { login } from "../../connection/authentication";
+import "./Form.css";
 
 
 /**
  * Login form component. Contains username and password fields.
  * 
  */
-export default function LoginForm({}) {
+export default function LoginForm() {
 
     // Input fields
     const [username, setUsername] = useState();
