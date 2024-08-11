@@ -13,12 +13,14 @@ import { getCourseAssignments } from "./assignments";
  */
 export const validateResponse = async (response, status, callback) => {
 
+    //console.log(response);
+
     if (response.status === status) {
         callback();
     }
 
     if (!response.ok) {
-        const { message } = await res.json();
+        const { message } = await response.json();
         throw new Error(message);
     }
 
@@ -30,13 +32,14 @@ export const validateResponse = async (response, status, callback) => {
 /**
  * Calculate a course grade using assignment grades and weights.
  * 
+ * @param {function():void} onUnauthorized - To call if the user is not logged in
  * @param {string} courseId 
  * @returns {Promise<Number|null>} - Null if there are no assignments with both a weight and grade.
  */
-export const calculateGrade = async courseId => {
+export const calculateGrade = async (onUnauthorized, courseId) => {
 
     // Get assignments
-    let assignments = getCourseAssignments(courseId);
+    let assignments = await getCourseAssignments(onUnauthorized, courseId);
 
     // Get assignments with both a grade and weight
     assignments.filter(assignment => typeof assignment.grade !== "undefined" && assignment.weight);
@@ -44,8 +47,8 @@ export const calculateGrade = async courseId => {
     if (assignments.length === 0) return null;
 
     // Calculate course grade
-    const totalWeight = 0;
-    const totalEarned = 0;
+    let totalWeight = 0;
+    let totalEarned = 0;
     for (let i = 0; i < assignments.length; i++) {
         totalWeight += assignments[i].weight;
         totalEarned += assignments[i].grade;

@@ -3,6 +3,10 @@ import React from "react";
 
 export default function CourseListPage() {
 
-    return <h1 className="content">Course List</h1>;
+    return (
+        <div className="content">
+            <h1>Course List</h1>
+        </div>
+    );
 
-}
+};

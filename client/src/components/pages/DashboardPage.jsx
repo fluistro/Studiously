@@ -20,7 +20,7 @@ import { getUserCourses } from "../../connection/courses";
 const getAssignmentJSX = assignmentList => {
 
     // Create a shallow copy
-    const arr = assignmentList.slice();
+    let arr = assignmentList.slice();
 
     // Filter out completed assignments
     arr.filter(assignment => !assignment.isCompleted);
@@ -29,7 +29,7 @@ const getAssignmentJSX = assignmentList => {
     arr.sort((a,b) => a.dueDate - b.dueDate);
 
     // Convert to JSX
-    arr.forEach((assignment, index) => {
+    const result = arr.map((assignment, index) => {
         return (
             <div className="list-block" key={index}>
                 <div><p>{assignment.name}</p></div>
@@ -39,7 +39,7 @@ const getAssignmentJSX = assignmentList => {
     });
 
     // Return at most 5 elements
-    return arr.length > 5 ? arr.slice(0,5) : arr;
+    return result.length > 5 ? result.slice(0,5) : result;
 
 };
 
@@ -50,8 +50,8 @@ const getAssignmentJSX = assignmentList => {
 const getCourseJSX = courseList => {
 
     // Create a shallow copy
-    const arr = courseList.slice();
-
+    let arr = courseList.slice();
+    
     // Sort by grade
     arr.sort((a,b) => {
         if (a.grade === null && b.grade === null) return 0;
@@ -61,7 +61,7 @@ const getCourseJSX = courseList => {
     });
 
     // Convert to JSX
-    arr.forEach((course, index) => {
+    const result = arr.map((course, index) => {
         return (
             <div className="list-block" key={index}>
                 <div><p>{course.name}</p></div>
@@ -69,6 +69,9 @@ const getCourseJSX = courseList => {
             </div>
         );
     });
+
+    // Return at most 5 elements
+    return result.length > 5 ? result.slice(0,5) : result;
 
 }
 
@@ -92,6 +95,8 @@ export default function DashboardPage({ resetUser }) {
                 setAssignments(getAssignmentJSX(assignmentList));
                 setCourses(getCourseJSX(courseList));
 
+                console.log(assignments)
+
             } catch (error) {
                 console.log(`Dashboard error: ${error.message}`);
             }
@@ -100,7 +105,7 @@ export default function DashboardPage({ resetUser }) {
 
         getInfo();
 
-    }, []);
+    }, [resetUser]);
 
     return (
         <div className="content">
@@ -109,15 +114,17 @@ export default function DashboardPage({ resetUser }) {
 
             {/* List of upcoming assignments, sorted by due date */}
             <div>
-                {assignments}
+                <h2>Upcoming Assignments</h2>
+                {assignments.length > 0 ? assignments : <p>None</p>}
             </div>
 
             {/* List of courses, sorted by grade */}
             <div>
+                <h2>Grades</h2>
                 {courses}
             </div>
 
         </div>
     );
-    
+
 };

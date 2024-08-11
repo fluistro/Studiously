@@ -28,6 +28,7 @@ AssignmentRouter.use(async (req, res, next) => {
 
     req.userId = currentUser.userId;
     req.user = user;
+    console.log(user);
     next();
 
 });
@@ -84,10 +85,10 @@ AssignmentRouter.get("/:courseId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
 
         // Ensure course belongs to user
-        if (!req.user.course.includes(courseId)) {
+        if (!req.user.courses.includes(courseId)) {
             return res.status(404).send({
                 message: "Course not found in user info"
             });
@@ -132,7 +133,7 @@ AssignmentRouter.post("/:courseId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
 
         // Ensure the required info was sent
         const { name, dueDate, grade, weight } = req.body;
@@ -196,8 +197,8 @@ AssignmentRouter.put("/:courseId/:assignmentId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
-        const assignmentId = mongoose.Types.ObjectId(req.params.assignmentId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
+        const assignmentId = new mongoose.Types.ObjectId(req.params.assignmentId);
 
         // Ensure request contains required fields
         const { name, dueDate, isCompleted, grade, weight } = req.body;
@@ -259,8 +260,8 @@ AssignmentRouter.delete("/:courseId/:assignmentId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
-        const assignmentId = mongoose.Types.ObjectId(req.params.assignmentId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
+        const assignmentId = new mongoose.Types.ObjectId(req.params.assignmentId);
 
         // Ensure that the current user is authorized to edit this course
 

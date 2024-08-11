@@ -34,7 +34,7 @@ export const getUserCourses = async onUnauthorized => {
         let courses = [];
         for (let i = 0; i < data.length; i++) {
             let course = data[i];
-            course.grade = await calculateGrade(course._id);
+            course.grade = await calculateGrade(onUnauthorized, course._id);
             courses.push(course);
         }
 
