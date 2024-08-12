@@ -64,8 +64,8 @@ export default function EditCourseForm({ courseId, logout, close }) {
                            onChange={event => setName(event.target.value)}></input>
                     <br/><br/>
                 </form>
-                <button type="reset" onClick={cancel} className="cancel-button"><b>Cancel</b></button>
-                <button type="submit" onClick={onSubmit} className="submit-button"><b>Edit</b></button>
+                <button type="reset" onClick={cancel} className="red-outline-button"><b>Cancel</b></button>
+                <button type="submit" onClick={onSubmit} className="purple-button"><b>Edit</b></button>
             </div>
 
         </div>

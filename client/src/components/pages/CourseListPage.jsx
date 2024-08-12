@@ -80,7 +80,7 @@ export default function CourseListPage({ resetUser }) {
 
                     {/* Buttons */}
                     <button className="purple-button" onClick={() => showEditCourseForm(course._id)}>Edit</button>
-                    <button className="purple-button" onClick={() => deleteCourse(course._id, resetUser)}>Delete</button>
+                    <button className="red-button" onClick={() => deleteCourse(course._id, resetUser)}>Delete</button>
 
                 </div>
             );

@@ -99,8 +99,8 @@ export default function CreateAssignmentForm({ courseId, logout, close }) {
                            onChange={event => setGrade(event.target.value)}></input>
                     <br/><br/>
                 </form>
-                <button type="reset" onClick={cancel} className="cancel-button"><b>Cancel</b></button>
-                <button type="submit" onClick={onSubmit} className="submit-button"><b>Create</b></button>
+                <button type="reset" onClick={cancel} className="red-outline-button"><b>Cancel</b></button>
+                <button type="submit" onClick={onSubmit} className="purple-button"><b>Create</b></button>
             </div>
 
         </div>

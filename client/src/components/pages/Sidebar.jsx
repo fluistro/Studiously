@@ -25,7 +25,7 @@ export default function Sidebar({ username, resetUser }) {
             <NavLink to="/home/courses" className="sidebar-item">Courses</NavLink>
 
             <p>Currently logged in as: {username}</p>
-            <button className="purple-button" onClick={handleLogout}>Log out</button>
+            <button className="red-button" onClick={handleLogout}>Log out</button>
 
         </div>
     );
