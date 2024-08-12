@@ -61,3 +61,10 @@
 
     font-size: 22px;
 }
+
+.purple-button {
+    background-color:#a376de;
+    height: 40px;
+    width: 80px;
+    border-radius: 5px;
+}

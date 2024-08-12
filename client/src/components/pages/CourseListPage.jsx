@@ -71,16 +71,16 @@ export default function CourseListPage({ resetUser }) {
     const getCourseJSX = () => {
         return courses.map((course, index) => {
             return (
-                <div className="list-area">
+                <div className="list-area" key={index} >
 
-                    <div className="list-block" key={index}>
+                    <div className="list-block" >
                         <div><p>{course.name}</p></div>
                         <div><p>{course.grade}</p></div>
                     </div>
 
                     {/* Buttons */}
-                    <button onClick={() => showEditCourseForm(course._id)}>Edit</button>
-                    <button onClick={() => deleteCourse(course._id, resetUser)}>Delete</button>
+                    <button className="purple-button" onClick={() => showEditCourseForm(course._id)}>Edit</button>
+                    <button className="purple-button" onClick={() => deleteCourse(course._id, resetUser)}>Delete</button>
 
                 </div>
             );
@@ -156,7 +156,7 @@ export default function CourseListPage({ resetUser }) {
                 <option value="assignments">Assignments</option>
             </select>
 
-            <button onClick={() => showCreateCourseForm}></button>
+            <button className="purple-button" onClick={() => showCreateCourseForm()}>Create</button>
 
             {courseList}
 

@@ -13,7 +13,7 @@ import { getCourseAssignments } from "./assignments";
  */
 export const validateResponse = async (response, status, callback) => {
 
-    //console.log(response);
+    if (response.status === 204) return;
 
     if (response.status === status) {
         callback();

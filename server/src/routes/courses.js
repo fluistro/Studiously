@@ -68,7 +68,7 @@ CourseRouter.get("/:courseId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
 
         // Check that user exists has the requested course
         if (!req.user.courses.includes(courseId)) {
@@ -143,7 +143,7 @@ CourseRouter.put("/edit/:courseId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
 
         // Ensure user is authorized
 
@@ -191,7 +191,7 @@ CourseRouter.delete("/:courseId", async (req, res) => {
 
     try {
 
-        const courseId = mongoose.Types.ObjectId(req.params.courseId);
+        const courseId = new mongoose.Types.ObjectId(req.params.courseId);
 
         // Remove course from user's course array
         const updateInfo = await User.updateOne(
