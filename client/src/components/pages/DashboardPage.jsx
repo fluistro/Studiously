@@ -76,6 +76,11 @@ const getCourseJSX = courseList => {
 }
 
 
+/**
+ * Dashboard component. Expects a function to reset user state.
+ * 
+ * @returns {React.JSX.Element}
+ */
 export default function DashboardPage({ resetUser }) {
 
     // Lists of JSX components
@@ -94,8 +99,6 @@ export default function DashboardPage({ resetUser }) {
 
                 setAssignments(getAssignmentJSX(assignmentList));
                 setCourses(getCourseJSX(courseList));
-
-                console.log(assignments)
 
             } catch (error) {
                 console.log(`Dashboard error: ${error.message}`);
