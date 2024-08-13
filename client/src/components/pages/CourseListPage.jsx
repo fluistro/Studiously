@@ -14,14 +14,15 @@ import EditCourseForm from "../forms/EditCourseForm";
 /**
  * Lightbox for displaying create course form
  * 
- * @param {function():void} logout // To reset user state 
- * @param {function():void} close // To close lightbox 
+ * @param {function():void} update - To update the course list
+ * @param {function():void} logout - To reset user state 
+ * @param {function():void} close - To close lightbox 
  * @returns 
  */
-const CreateCourseLightbox = (logout, close) => {
+const CreateCourseLightbox = (update, logout, close) => {
     return (
         <div className="lightbox">
-            <CreateCourseForm close={close} logout={logout}/>
+            <CreateCourseForm updateCourses={update} close={close} logout={logout}/>
         </div>
     )
 };
@@ -29,14 +30,16 @@ const CreateCourseLightbox = (logout, close) => {
 /**
  * Lightbox for displaying edit course form
  * 
- * @param {function():void} logout // To reset user state 
- * @param {function():void} close // To close lightbox 
+ * @param {function():void} update - To update the course list
+ * @param {string} id - Course id to edit
+ * @param {function():void} logout - To reset user state 
+ * @param {function():void} close - To close lightbox 
  * @returns 
  */
-const EditCourseLightbox = (id, logout, close) => {
+const EditCourseLightbox = (update, id, logout, close) => {
     return (
         <div className="lightbox">
-            <EditCourseForm courseId={id} close={close} logout={logout}/>
+            <EditCourseForm updateCourses={update} courseId={id} close={close} logout={logout}/>
         </div>
     )
 };
@@ -90,6 +93,8 @@ export default function CourseListPage({ resetUser }) {
     const [form, setForm] = useState(); // To indicate which (if any) form to show
     const [courseId, setCourseId] = useState(); // For the edit form
 
+    const [updateCourses, setUpdateCourses] = useState(false); // To trigger the fetch request effect hook
+
 
     // Callbacks to handle form showing
 
@@ -120,8 +125,8 @@ export default function CourseListPage({ resetUser }) {
 
                     <div className="list-block" >
                         <div><p>{course.name}</p></div>
-                        <div><p>{course.assignments.length}</p></div>
-                        <div><p>{course.grade}</p></div>
+                        <div><p>{`${course.assignments.length} upcoming assignments`}</p></div>
+                        <div><p>{course.grade !== null ? course.grade : "No grade"}</p></div>
                     </div>
 
                     {/* Buttons */}
@@ -155,8 +160,9 @@ export default function CourseListPage({ resetUser }) {
         }
 
         getInfo();
+        document.getElementById("select-sort").value = "name";
 
-    }, [resetUser]);
+    }, [resetUser, updateCourses]);
 
     return (
         <div className="content">
@@ -170,11 +176,11 @@ export default function CourseListPage({ resetUser }) {
 
             <button className="purple-button" onClick={() => showCreateCourseForm()}>Create</button>
 
-            {courseList()}
+            {courseList}
 
             {/* Lightboxes */}
-            {form === "create" && CreateCourseLightbox(resetUser, closeForm)}
-            {form === "edit" && EditCourseLightbox(courseId, resetUser, closeForm)}
+            {form === "create" && CreateCourseLightbox(() => setUpdateCourses(val => !val), resetUser, closeForm)}
+            {form === "edit" && EditCourseLightbox(() => setUpdateCourses(val => !val), courseId, resetUser, closeForm)}
         </div>
     );
 

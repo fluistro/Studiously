@@ -79,6 +79,7 @@
 .red-outline-button {
     background-color:#ffffff;
     border-color:#f80000d0;
+    color: #f80000d0;
     height: 40px;
     width: 80px;
     border-radius: 5px;

@@ -139,7 +139,7 @@ CourseRouter.post("/", async (req, res) => {
  * Requires: new course name.
  * Response: none.
  */
-CourseRouter.put("/edit/:courseId", async (req, res) => {
+CourseRouter.put("/:courseId", async (req, res) => {
 
     try {
 
