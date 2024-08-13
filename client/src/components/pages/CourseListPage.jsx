@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { getUserCourses, deleteCourse } from "../../connection/courses";
 import CreateCourseForm from "../forms/CreateCourseForm";
 import EditCourseForm from "../forms/EditCourseForm";
@@ -24,7 +24,7 @@ const CreateCourseLightbox = (logout, close) => {
             <CreateCourseForm close={close} logout={logout}/>
         </div>
     )
-}
+};
 
 /**
  * Lightbox for displaying edit course form
@@ -39,7 +39,44 @@ const EditCourseLightbox = (id, logout, close) => {
             <EditCourseForm courseId={id} close={close} logout={logout}/>
         </div>
     )
-}
+};
+
+/**
+ * @param {string} sorter - one of "name", "grade", "assignments"
+ * @param {[Course]} courses
+ * 
+ * @returns {[Course]}
+ */
+const sortCourses = (sorter, courses) => {
+    const newCourses = courses.slice();
+
+    switch(sorter) {
+
+        case "name":
+            newCourses.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+            break;
+
+        case "grade":
+            newCourses.sort((a, b) => {
+                return a.grade - b.grade;
+            });
+            break;
+
+        case "assignments":
+            newCourses.sort((a, b) => {
+                return a.assignments.length - b.assignments.length;
+            });
+            break;
+
+        default:
+            console.log(`Invalid sort criteria: ${sorter}`);
+
+    }
+
+    return newCourses;
+};
 
 
 /**
@@ -50,31 +87,40 @@ const EditCourseLightbox = (id, logout, close) => {
 export default function CourseListPage({ resetUser }) {
 
     const [courses, setCourses] = useState([]); // Array of Course objects
-    const [courseList, setCourseList] = useState([]); // Array of JSX elements
-    const [sorter, setSorter] = useState(); // Field to sort on
-
     const [form, setForm] = useState(); // To indicate which (if any) form to show
     const [courseId, setCourseId] = useState(); // For the edit form
 
-    const showCreateCourseForm = () => setForm("create");
-    const showEditCourseForm = id => {
-        setForm("edit");
-        setCourseId(id);
-    }
-    const closeForm = () => setForm(undefined);
+
+    // Callbacks to handle form showing
+
+    const showCreateCourseForm = useCallback(
+        () => setForm("create"), 
+        []
+    );
+
+    const showEditCourseForm = useCallback(
+        id => {
+            setForm("edit");
+            setCourseId(id);
+        },
+        []
+    );
+
+    const closeForm = useCallback(
+        () => setForm(undefined), 
+        []
+    );
 
 
-    /**
-    * @param {[Course]} courses 
-    * @returns {[React.JSX.Element]}
-    */
-    const getCourseJSX = () => {
-        return courses.map((course, index) => {
+    // Course list as a JSX list
+    const courseList = useMemo (
+        () => courses.map((course, index) => {
             return (
                 <div className="list-area" key={index} >
 
                     <div className="list-block" >
                         <div><p>{course.name}</p></div>
+                        <div><p>{course.assignments.length}</p></div>
                         <div><p>{course.grade}</p></div>
                     </div>
 
@@ -84,12 +130,15 @@ export default function CourseListPage({ resetUser }) {
 
                 </div>
             );
-        });
-    }
+        }),
+        [courses, showEditCourseForm, resetUser]
+    );
 
 
     // Fetch assignments and courses on first render
     useEffect(() => {
+
+        console.log("effect")
 
         async function getInfo() {
 
@@ -97,7 +146,7 @@ export default function CourseListPage({ resetUser }) {
                 
                 const data = await getUserCourses(resetUser);
                 setCourses(data);
-                setCourseList(getCourseJSX());
+                setCourses(courses => sortCourses("name", courses));
 
             } catch (error) {
                 console.log(`Course list error: ${error.message}`);
@@ -107,50 +156,13 @@ export default function CourseListPage({ resetUser }) {
 
         getInfo();
 
-    }, [resetUser, getCourseJSX]);
-
-    // To call when sorting field is changed
-    async function onSorterChange(event) {
-
-        setSorter(event.target.value);
-
-        const newCourses = courses.slice();
-
-        switch(sorter) {
-
-            case "name":
-                newCourses.sort((a, b) => {
-                    return a.name.localeCompare(b.name);
-                });
-                break;
-
-            case "grade":
-                newCourses.sort((a, b) => {
-                    return a.grade - b.grade;
-                });
-                break;
-
-            case "assignments":
-                newCourses.sort((a, b) => {
-                    return a.assignments.length - b.assignments.length;
-                });
-                break;
-
-            default:
-                console.log(`Invalid sort criteria: ${sorter}`);
-
-        }
-
-        setCourses(newCourses);
-        setCourseList(getCourseJSX(courses, showEditCourseForm));
-
-    }
+    }, [resetUser]);
 
     return (
         <div className="content">
             <h1>Courses</h1>
 
-            <select name="select-sort" id="select-sort" onChange={onSorterChange}>
+            <select name="select-sort" id="select-sort" onChange={(event) => setCourses(sortCourses(event.target.value, courses))}>
                 <option value="name">Name</option>
                 <option value="grade">Grade</option>
                 <option value="assignments">Assignments</option>
@@ -158,7 +170,7 @@ export default function CourseListPage({ resetUser }) {
 
             <button className="purple-button" onClick={() => showCreateCourseForm()}>Create</button>
 
-            {courseList}
+            {courseList()}
 
             {/* Lightboxes */}
             {form === "create" && CreateCourseLightbox(resetUser, closeForm)}

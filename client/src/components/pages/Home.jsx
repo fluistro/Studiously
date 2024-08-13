@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Outlet } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
@@ -11,7 +11,7 @@ export default function Home() {
     const [user, setUser] = useState();
 
     // Function to reset user on client side
-    const resetUser = () => setUser(undefined);
+    const resetUser = useCallback(() => setUser(undefined), []);
 
     // Set current user on first render
     useEffect(() => {
