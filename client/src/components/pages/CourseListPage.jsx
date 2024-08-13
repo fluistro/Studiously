@@ -131,7 +131,12 @@ export default function CourseListPage({ resetUser }) {
 
                     {/* Buttons */}
                     <button className="purple-button" onClick={() => showEditCourseForm(course._id)}>Edit</button>
-                    <button className="red-button" onClick={() => deleteCourse(course._id, resetUser)}>Delete</button>
+                    <button className="red-button" onClick={
+                        async () => {
+                            await deleteCourse(course._id, resetUser);
+                            setUpdateCourses(val => !val);
+                        }
+                    }>Delete</button>
 
                 </div>
             );
@@ -142,8 +147,6 @@ export default function CourseListPage({ resetUser }) {
 
     // Fetch assignments and courses on first render
     useEffect(() => {
-
-        console.log("effect")
 
         async function getInfo() {
 

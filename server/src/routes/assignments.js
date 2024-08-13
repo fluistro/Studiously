@@ -28,7 +28,6 @@ AssignmentRouter.use(async (req, res, next) => {
 
     req.userId = currentUser.userId;
     req.user = user;
-    console.log(user);
     next();
 
 });
@@ -90,7 +89,7 @@ AssignmentRouter.get("/:courseId", async (req, res) => {
         // Ensure course belongs to user
         if (!req.user.courses.includes(courseId)) {
             return res.status(404).send({
-                message: "Course not found in user info"
+                message: `Course not found in user info: ${courseId}`
             });
         }
 
