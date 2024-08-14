@@ -19,10 +19,10 @@ import EditCourseForm from "../forms/EditCourseForm";
  * @param {function():void} close - To close lightbox 
  * @returns 
  */
-const CreateCourseLightbox = (update, logout, close) => {
+const CreateCourseLightbox = (logout, close) => {
     return (
         <div className="lightbox">
-            <CreateCourseForm updateCourses={update} close={close} logout={logout}/>
+            <CreateCourseForm close={close} logout={logout}/>
         </div>
     )
 };
@@ -36,10 +36,10 @@ const CreateCourseLightbox = (update, logout, close) => {
  * @param {function():void} close - To close lightbox 
  * @returns 
  */
-const EditCourseLightbox = (update, id, logout, close) => {
+const EditCourseLightbox = ( id, logout, close) => {
     return (
         <div className="lightbox">
-            <EditCourseForm updateCourses={update} courseId={id} close={close} logout={logout}/>
+            <EditCourseForm courseId={id} close={close} logout={logout}/>
         </div>
     )
 };
@@ -112,7 +112,10 @@ export default function CourseListPage({ resetUser }) {
     );
 
     const closeForm = useCallback(
-        () => setForm(undefined), 
+        () => {
+            setForm(undefined);
+            setUpdateCourses(val => !val);
+        }, 
         []
     );
 
@@ -134,7 +137,7 @@ export default function CourseListPage({ resetUser }) {
                     <button className="red-button" onClick={
                         async () => {
                             await deleteCourse(course._id, resetUser);
-                            setUpdateCourses(val => !val);
+                            setUpdateCourses(val => !val); // Re-render course list
                         }
                     }>Delete</button>
 
@@ -182,8 +185,8 @@ export default function CourseListPage({ resetUser }) {
             {courseList}
 
             {/* Lightboxes */}
-            {form === "create" && CreateCourseLightbox(() => setUpdateCourses(val => !val), resetUser, closeForm)}
-            {form === "edit" && EditCourseLightbox(() => setUpdateCourses(val => !val), courseId, resetUser, closeForm)}
+            {form === "create" && CreateCourseLightbox(resetUser, closeForm)}
+            {form === "edit" && EditCourseLightbox(courseId, resetUser, closeForm)}
         </div>
     );
 

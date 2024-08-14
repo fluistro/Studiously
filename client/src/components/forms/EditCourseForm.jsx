@@ -7,11 +7,10 @@ import { editCourse } from "../../connection/courses";
  * 
  * Expects:
  * - Course id to edit
- * - A callback to update the "courses" state
  * - A callback to log out the user
  * - A callback to close the form (on success/cancel)
  */
-export default function EditCourseForm({ courseId, updateCourses, logout, close }) {
+export default function EditCourseForm({ courseId, logout, close }) {
 
     // Input fields
     const [name, setName] = useState();
@@ -34,7 +33,6 @@ export default function EditCourseForm({ courseId, updateCourses, logout, close 
             // If session already exists or the login request is successful, redirect to homepage.
             await editCourse(courseId, { name }, logout);
 
-            updateCourses();
             close();
 
         } catch (error) {

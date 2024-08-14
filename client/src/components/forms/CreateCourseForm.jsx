@@ -6,11 +6,10 @@ import { createCourse } from "../../connection/courses";
  * Create course form component. Contains name field.
  * 
  * Expects:
- * - A callback to update the "courses" state
  * - A callback to log out the user
  * - A callback to close the form (on success/cancel)
  */
-export default function CreateCourseForm({ updateCourses, logout, close }) {
+export default function CreateCourseForm({ logout, close }) {
 
     // Input fields
     const [name, setName] = useState();
@@ -31,8 +30,6 @@ export default function CreateCourseForm({ updateCourses, logout, close }) {
             }
 
             await createCourse({ name }, logout);
-
-            updateCourses();
             close();
 
         } catch (error) {
