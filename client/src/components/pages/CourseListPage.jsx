@@ -17,7 +17,7 @@ import EditCourseForm from "../forms/EditCourseForm";
  * @param {function():void} update - To update the course list
  * @param {function():void} logout - To reset user state 
  * @param {function():void} close - To close lightbox 
- * @returns 
+ * @returns {React.JSX.Element}
  */
 const CreateCourseLightbox = (logout, close) => {
     return (
@@ -34,7 +34,7 @@ const CreateCourseLightbox = (logout, close) => {
  * @param {string} id - Course id to edit
  * @param {function():void} logout - To reset user state 
  * @param {function():void} close - To close lightbox 
- * @returns 
+ * @returns {React.JSX.Element}
  */
 const EditCourseLightbox = ( id, logout, close) => {
     return (
@@ -63,7 +63,10 @@ const sortCourses = (sorter, courses) => {
 
         case "grade":
             newCourses.sort((a, b) => {
-                return a.grade - b.grade;
+                if (a.grade === null && b.grade === null) return 0;
+                if (a.grade === null) return 1;
+                if (b.grade === null) return -1;
+                return b.grade - a.grade;
             });
             break;
 
@@ -148,7 +151,7 @@ export default function CourseListPage({ resetUser }) {
     );
 
 
-    // Fetch assignments and courses on first render
+    // Fetch courses on first render
     useEffect(() => {
 
         async function getInfo() {

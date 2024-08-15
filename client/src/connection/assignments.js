@@ -108,6 +108,7 @@ export const createAssignment = async (courseId, assignmentInfo, onUnauthorized)
 
 
 /**
+ * @param {string} courseId
  * @param {string} assignmentId
  * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 

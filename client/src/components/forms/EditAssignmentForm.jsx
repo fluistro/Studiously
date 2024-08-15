@@ -6,11 +6,12 @@ import { editAssignment } from "../../connection/assignments";
  * Edit assignment form component. Contains name, date, and isCompleted fields, and optional grade/weight.
  * 
  * Expects:
- * - Course id associated with the new assignment
+ * - Course id associated with the assignment to edit
+ * - Assignment id to edit
  * - A method to log out the user
  * - A method to close the form (on success/cancel)
  */
-export default function CreateAssignmentForm({ courseId, logout, close }) {
+export default function EditAssignmentForm({ courseId, assignmentId, logout, close }) {
 
     // Input fields, all strings
     const [name, setName] = useState();
@@ -29,7 +30,7 @@ export default function CreateAssignmentForm({ courseId, logout, close }) {
 
             event.preventDefault();
 
-            if (!name || !date) {
+            if (!name || !dueDate) {
                 setError("Missing name or date");
                 return;
             }
@@ -42,7 +43,7 @@ export default function CreateAssignmentForm({ courseId, logout, close }) {
                 weight: weight && +weight
             }
 
-            await editAssignment(courseId, assignmentInfo, logout);
+            await editAssignment(courseId, assignmentId, assignmentInfo, logout);
             close();
 
         } catch (error) {
@@ -83,7 +84,7 @@ export default function CreateAssignmentForm({ courseId, logout, close }) {
                     <label htmlFor="edit-assignment-completed">Is completed</label><br/>
                     <input type="checkbox" 
                            id="edit-assignment-completed" 
-                           name="date" 
+                           name="completed" 
                            onClick={() => setIsCompleted(!isCompleted)}></input> 
                     <br/><br/>
                     <label htmlFor="edit-assignment-weight">Assignment weight (optional, 0-100)</label><br/>
@@ -95,7 +96,7 @@ export default function CreateAssignmentForm({ courseId, logout, close }) {
                     <label htmlFor="edit-assignment-grade">Assignment grade (optional, 0-100)</label><br/>
                     <input type="text" 
                            id="edit-assignment-grade" 
-                           name="weight" 
+                           name="grade" 
                            onChange={event => setGrade(event.target.value)}></input>
                     <br/><br/>
                 </form>

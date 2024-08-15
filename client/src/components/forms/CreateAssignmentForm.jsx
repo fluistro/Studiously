@@ -28,7 +28,7 @@ export default function CreateAssignmentForm({ courseId, logout, close }) {
 
             event.preventDefault();
 
-            if (!name || !date) {
+            if (!name || !dueDate) {
                 setError("Missing name or date");
                 return;
             }
