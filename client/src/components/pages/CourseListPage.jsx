@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { getUserCourses, deleteCourse } from "../../connection/courses";
 import CreateCourseForm from "../forms/CreateCourseForm";
 import EditCourseForm from "../forms/EditCourseForm";
+import { useNavigate } from "react-router-dom";
 
 
 // For Intellisense
@@ -92,6 +93,8 @@ const sortCourses = (sorter, courses) => {
  */
 export default function CourseListPage({ resetUser }) {
 
+    const navigate = useNavigate();
+
     const [courses, setCourses] = useState([]); // Array of Course objects
     const [form, setForm] = useState(); // To indicate which (if any) form to show
     const [courseId, setCourseId] = useState(); // For the edit form
@@ -129,7 +132,7 @@ export default function CourseListPage({ resetUser }) {
             return (
                 <div className="list-area" key={index} >
 
-                    <div className="list-block" >
+                    <div className="list-block" onClick={() => navigate(`/home/courses/${course._id}`)}>
                         <div><p>{course.name}</p></div>
                         <div><p>{`${course.assignments.length} upcoming assignments`}</p></div>
                         <div><p>{course.grade !== null ? course.grade : "No grade"}</p></div>
@@ -147,7 +150,7 @@ export default function CourseListPage({ resetUser }) {
                 </div>
             );
         }),
-        [courses, showEditCourseForm, resetUser]
+        [courses, showEditCourseForm, resetUser, navigate]
     );
 
 

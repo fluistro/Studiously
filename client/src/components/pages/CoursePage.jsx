@@ -99,7 +99,8 @@ const sortFilterAssignments = (sorter, showCompleted, assignments) => {
                 if (a.weight === null) return 1;
                 if (b.weight === null) return -1;
                 return b.weight - a.weight;
-            })
+            });
+            break;
 
         default:
             console.log(`Invalid sort criteria: ${sorter}`);
@@ -116,9 +117,9 @@ const sortFilterAssignments = (sorter, showCompleted, assignments) => {
  * 
  * @returns {React.JSX.Element}
  */
-export default function CoursePage({ resetUser, courseId }) {
+export default function CoursePage({ resetUser }) {
 
-    const [courseId] = useParams();
+    const {courseId} = useParams();
 
     const [course, setCourse] = useState(); // Course object representing current course
     const [assignments, setAssignments] = useState([]); // Array of Assignment objects
@@ -192,7 +193,7 @@ export default function CoursePage({ resetUser, courseId }) {
                 </div>
             );
         }),
-        [assignments, showEditAssignmentForm, resetUser]
+        [assignments, courseId, showEditAssignmentForm, resetUser]
     );
 
 
@@ -219,12 +220,14 @@ export default function CoursePage({ resetUser, courseId }) {
         getInfo();
         document.getElementById("select-sort").value = "name";
 
-    }, [resetUser, update]);
+    }, [resetUser, update, courseId]);
 
     
     return (
         <div className="content">
             <h1>{course && course.name}</h1>
+
+            <label htmlFor="select-sort">Sort by:  </label>
 
             <select name="select-sort" id="select-sort" onChange={onSorterChange}>
                 <option value="name">Name</option>
@@ -233,10 +236,16 @@ export default function CoursePage({ resetUser, courseId }) {
                 <option value="weight">Weight</option>
             </select>
 
+            <br />
+
+            <label htmlFor="show-completed">Show completed assignments </label>
+
             <input type="checkbox" 
                 id="show-completed" 
                 name="completed" 
                 onClick={onFilterChange}></input> 
+
+            <br />
 
             <button className="purple-button" onClick={() => showCreateAssignmentForm()}>Create</button>
 

@@ -53,8 +53,6 @@ export const getAssignments = async onUnauthorized => {
  */
 export const getCourseAssignments = async (onUnauthorized, courseId) => {
 
-    
-
     try {
 
         const response = await fetch(`${route}/${courseId}`, {

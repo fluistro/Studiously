@@ -62,7 +62,7 @@ export const getCourse = async (courseId, onUnauthorized) => {
         });
 
         const course = await validateResponse(response, 401, onUnauthorized);
-        course.grade = await calculateGrade(course._id);
+        course.grade = await calculateGrade(onUnauthorized, course._id);
     
         return course;
         
