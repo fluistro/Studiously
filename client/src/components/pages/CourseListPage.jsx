@@ -33,15 +33,15 @@ const CreateCourseLightbox = (logout, close) => {
  * Lightbox for displaying edit course form
  * 
  * @param {function():void} update - To update the course list
- * @param {string} id - Course id to edit
+ * @param {Course} course - Course info to edit
  * @param {function():void} logout - To reset user state 
  * @param {function():void} close - To close lightbox 
  * @returns {React.JSX.Element}
  */
-const EditCourseLightbox = ( id, logout, close) => {
+const EditCourseLightbox = ( course, logout, close) => {
     return (
         <div className="lightbox">
-            <EditCourseForm courseId={id} close={close} logout={logout}/>
+            <EditCourseForm course={course} close={close} logout={logout}/>
         </div>
     )
 };
@@ -98,7 +98,7 @@ export default function CourseListPage({ resetUser }) {
 
     const [courses, setCourses] = useState([]); // Array of Course objects
     const [form, setForm] = useState(); // To indicate which (if any) form to show
-    const [courseId, setCourseId] = useState(); // For the edit form
+    const [course, setCourse] = useState(); // For the edit form
 
     const [updateCourses, setUpdateCourses] = useState(false); // To trigger the fetch request effect hook
 
@@ -117,9 +117,9 @@ export default function CourseListPage({ resetUser }) {
     );
 
     const showEditCourseForm = useCallback(
-        id => {
+        course => {
             setForm("edit");
-            setCourseId(id);
+            setCourse(course);
         },
         []
     );
@@ -153,7 +153,7 @@ export default function CourseListPage({ resetUser }) {
                     </div>
 
                     {/* Buttons */}
-                    <button className="purple-button" onClick={() => showEditCourseForm(course._id)}>Edit</button>
+                    <button className="purple-button" onClick={() => showEditCourseForm(course)}>Edit</button>
                     <button className="red-button" onClick={
                         async () => {
                             await deleteCourse(course._id, resetUser);
@@ -218,7 +218,7 @@ export default function CourseListPage({ resetUser }) {
 
             {/* Lightboxes */}
             {form === "create" && CreateCourseLightbox(resetUser, closeForm)}
-            {form === "edit" && EditCourseLightbox(courseId, resetUser, closeForm)}
+            {form === "edit" && EditCourseLightbox(course, resetUser, closeForm)}
         </div>
     );
 

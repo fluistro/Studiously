@@ -7,11 +7,11 @@ import { editAssignment } from "../../connection/assignments";
  * 
  * Expects:
  * - Course id associated with the assignment to edit
- * - Assignment id to edit
+ * - Old information about the assignment (assignment object)
  * - A method to log out the user
  * - A method to close the form (on success/cancel)
  */
-export default function EditAssignmentForm({ courseId, assignmentId, logout, close }) {
+export default function EditAssignmentForm({ courseId, assignment, logout, close }) {
 
     // Input fields, all strings
     const [name, setName] = useState();
@@ -43,7 +43,7 @@ export default function EditAssignmentForm({ courseId, assignmentId, logout, clo
                 weight: weight && +weight
             }
 
-            await editAssignment(courseId, assignmentId, assignmentInfo, logout);
+            await editAssignment(courseId, assignment._id, assignmentInfo, logout);
             close();
 
         } catch (error) {
@@ -73,30 +73,35 @@ export default function EditAssignmentForm({ courseId, assignmentId, logout, clo
                     <input type="text" 
                            id="edit-assignment-name" 
                            name="name" 
+                           value={assignment.name}
                            onChange={event => setName(event.target.value)}></input>
                     <br/><br/>
                     <label htmlFor="edit-assignment-date">Due date</label><br/>
                     <input type="date" 
                            id="edit-assignment-date" 
                            name="date" 
+                           value={assignment.dueDate}
                            onChange={event => setDueDate(event.target.value)}></input>
                     <br/><br/>
                     <label htmlFor="edit-assignment-completed">Is completed</label><br/>
                     <input type="checkbox" 
                            id="edit-assignment-completed" 
                            name="completed" 
+                           value={assignment.isCompleted}
                            onClick={() => setIsCompleted(!isCompleted)}></input> 
                     <br/><br/>
                     <label htmlFor="edit-assignment-weight">Assignment weight (optional, 0-100)</label><br/>
                     <input type="text" 
                            id="edit-assignment-weight" 
                            name="weight" 
+                           value={assignment.weight || ""}
                            onChange={event => setWeight(event.target.value)}></input>
                     <br/><br/>
                     <label htmlFor="edit-assignment-grade">Assignment grade (optional, 0-100)</label><br/>
                     <input type="text" 
                            id="edit-assignment-grade" 
                            name="grade" 
+                           value={assignment.grade || ""}
                            onChange={event => setGrade(event.target.value)}></input>
                     <br/><br/>
                 </form>

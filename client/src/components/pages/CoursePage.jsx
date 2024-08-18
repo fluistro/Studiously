@@ -44,10 +44,10 @@ const createAssignmentLightbox = (courseId, logout, close) => {
  * @param {function():void} close 
  * @returns {React.JSX.Element}
  */
-const editAssignmentLightbox = (courseId, assignmentId, logout, close) => {
+const editAssignmentLightbox = (courseId, assignment, logout, close) => {
     return (
         <div className="lightbox">
-            <EditAssignmentForm courseId={courseId} assignmentId={assignmentId} logout={logout} close={close} />
+            <EditAssignmentForm courseId={courseId} assignment={assignment} logout={logout} close={close} />
         </div>
     );
 };
@@ -125,7 +125,7 @@ export default function CoursePage({ resetUser }) {
     const [course, setCourse] = useState(); // Course object representing current course
     const [assignments, setAssignments] = useState([]); // Array of Assignment objects
     const [form, setForm] = useState(); // Indicates which form to show
-    const [assignmentId, setAssignmentId] = useState(); // For the edit form
+    const [assignment, setAssignment] = useState(); // For the edit form
 
     // For the assignment list
     const [sorter, setSorter] = useState("name");
@@ -145,9 +145,9 @@ export default function CoursePage({ resetUser }) {
     );
 
     const showEditAssignmentForm = useCallback(
-        id => {
+        assignment => {
             setForm("edit");
-            setAssignmentId(id);
+            setAssignment(assignment);
         },
         []
     );
@@ -186,7 +186,7 @@ export default function CoursePage({ resetUser }) {
                     </div>
 
                     {/* Buttons */}
-                    <button className="purple-button" onClick={() => showEditAssignmentForm(assignment._id)}>Edit</button>
+                    <button className="purple-button" onClick={() => showEditAssignmentForm(assignment)}>Edit</button>
                     <button className="red-button" onClick={
                         async () => {
                             await deleteAssignment(courseId, assignment._id, resetUser);
@@ -265,7 +265,7 @@ export default function CoursePage({ resetUser }) {
 
             {/* Lightboxes */}
             {form === "create" && createAssignmentLightbox(courseId, resetUser, closeForm)}
-            {form === "edit" && editAssignmentLightbox(courseId, assignmentId, resetUser, closeForm)}
+            {form === "edit" && editAssignmentLightbox(courseId, assignment, resetUser, closeForm)}
         </div>
     );
 }
