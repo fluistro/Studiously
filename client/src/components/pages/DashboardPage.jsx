@@ -33,7 +33,7 @@ const getAssignmentJSX = assignmentList => {
         return (
             <div className="list-block" key={index}>
                 <div><p>{assignment.name}</p></div>
-                <div><p>{assignment.dueDate}</p></div>
+                <div><p>{assignment.dueDate.slice(0, 10)}</p></div>
             </div>
         );
     });

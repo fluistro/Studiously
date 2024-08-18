@@ -39,19 +39,19 @@ export const validateResponse = async (response, status, callback) => {
 export const calculateGrade = async (onUnauthorized, courseId) => {
 
     // Get assignments
-    let assignments = await getCourseAssignments(onUnauthorized, courseId);
+    const assignments = await getCourseAssignments(onUnauthorized, courseId);
 
     // Get assignments with both a grade and weight
-    assignments.filter(assignment => typeof assignment.grade !== "undefined" && assignment.weight);
+    const hasGradeAndWeight = assignments.filter(assignment => Object.hasOwn(assignment, "grade") && Object.hasOwn(assignment, "weight"));
 
-    if (assignments.length === 0) return null;
+    if (hasGradeAndWeight.length === 0) return null;
 
     // Calculate course grade
     let totalWeight = 0;
     let totalEarned = 0;
-    for (let i = 0; i < assignments.length; i++) {
-        totalWeight += assignments[i].weight;
-        totalEarned += assignments[i].grade;
+    for (let i = 0; i < hasGradeAndWeight.length; i++) {
+        totalWeight += hasGradeAndWeight[i].weight;
+        totalEarned += hasGradeAndWeight[i].grade;
     }
 
     if (totalWeight === 0) return null;

@@ -178,7 +178,7 @@ export default function CoursePage({ resetUser }) {
 
                     <div className="list-block">
                         <div><p>{assignment.name}</p></div>
-                        <div><p>{`Due: ${assignment.dueDate}`}</p></div>
+                        <div><p>{`Due: ${assignment.dueDate.slice(0, 10)}`}</p></div>
                     </div>
 
                     {/* Buttons */}
