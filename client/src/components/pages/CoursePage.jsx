@@ -236,7 +236,7 @@ export default function CoursePage({ resetUser }) {
         <div className="content">
             <h1>{course && course.name}</h1>
 
-            <label htmlFor="select-sort">Sort by:  </label>
+            <label htmlFor="select-sort">Sort assignments by:  </label>
 
             <select name="select-sort" id="select-sort" onChange={onSorterChange} value={sorter}>
                 <option value="name">Name</option>
@@ -253,11 +253,13 @@ export default function CoursePage({ resetUser }) {
                 id="show-completed" 
                 name="completed" 
                 checked={showCompleted}
-                onClick={onFilterChange}></input> 
+                onChange={onFilterChange}></input> 
 
-            <br />
+            <br /><br />
 
             <button className="purple-button" onClick={() => showCreateAssignmentForm()}>Create</button>
+
+            <h2>Assignment List</h2>
 
             {assignmentList}
 

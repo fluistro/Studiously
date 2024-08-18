@@ -195,8 +195,12 @@ export default function CourseListPage({ resetUser }) {
     }, [resetUser, updateCourses]);
 
     return loading ? <Loading /> : (
+
         <div className="content">
+
             <h1>Courses</h1>
+
+            <label htmlFor="select-sort">Sort by:  </label>
 
             <select name="select-sort" id="select-sort" onChange={onSorterChange} value={sorter}>
                 <option value="name">Name</option>
@@ -204,7 +208,11 @@ export default function CourseListPage({ resetUser }) {
                 <option value="assignments">Assignments</option>
             </select>
 
+            <br /><br />
+
             <button className="purple-button" onClick={() => showCreateCourseForm()}>Create</button>
+
+            <h2>Course List</h2>
 
             {courseList}
 
