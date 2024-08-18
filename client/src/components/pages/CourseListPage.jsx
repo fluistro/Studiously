@@ -3,6 +3,7 @@ import { getUserCourses, deleteCourse } from "../../connection/courses";
 import CreateCourseForm from "../forms/CreateCourseForm";
 import EditCourseForm from "../forms/EditCourseForm";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 
 // For Intellisense
@@ -101,6 +102,12 @@ export default function CourseListPage({ resetUser }) {
 
     const [updateCourses, setUpdateCourses] = useState(false); // To trigger the fetch request effect hook
 
+    // For the course list
+    const [sorter, setSorter] = useState("name");
+
+    // To track if loading screen should be shown
+    const [loading, setLoading] = useState(true);
+
 
     // Callbacks to handle form showing
 
@@ -124,6 +131,13 @@ export default function CourseListPage({ resetUser }) {
         }, 
         []
     );
+
+
+    // Sort handler
+    const onSorterChange = event => {
+        setSorter(event.target.value);
+        setCourses(courses => sortCourses(sorter, courses));
+    }
 
 
     // Course list as a JSX list
@@ -159,28 +173,32 @@ export default function CourseListPage({ resetUser }) {
 
         async function getInfo() {
 
+            setLoading(true);
+
             try {
                 
                 const data = await getUserCourses(resetUser);
                 setCourses(data);
                 setCourses(courses => sortCourses("name", courses));
+                setSorter("name");
 
             } catch (error) {
                 console.log(`Course list error: ${error.message}`);
+            } finally {
+                setLoading(false);
             }
 
         }
 
         getInfo();
-        document.getElementById("select-sort").value = "name";
 
     }, [resetUser, updateCourses]);
 
-    return (
+    return loading ? <Loading /> : (
         <div className="content">
             <h1>Courses</h1>
 
-            <select name="select-sort" id="select-sort" onChange={(event) => setCourses(sortCourses(event.target.value, courses))}>
+            <select name="select-sort" id="select-sort" onChange={onSorterChange} value={sorter}>
                 <option value="name">Name</option>
                 <option value="grade">Grade</option>
                 <option value="assignments">Assignments</option>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loading from "./Loading";
 import { getAssignments } from "../../connection/assignments";
 import { getUserCourses } from "../../connection/courses";
 
@@ -87,10 +88,15 @@ export default function DashboardPage({ resetUser }) {
     const [assignments, setAssignments] = useState([]);
     const [courses, setCourses] = useState([]);
 
+    // To track if loading screen should be shown
+    const [loading, setLoading] = useState(true);
+
     // Fetch assignments and courses on first render
     useEffect(() => {
 
         async function getInfo() {
+
+            setLoading(true);
 
             try {
                 
@@ -102,6 +108,8 @@ export default function DashboardPage({ resetUser }) {
 
             } catch (error) {
                 console.log(`Dashboard error: ${error.message}`);
+            } finally {
+                setLoading(false);
             }
 
         }
@@ -110,7 +118,7 @@ export default function DashboardPage({ resetUser }) {
 
     }, [resetUser]);
 
-    return (
+    return loading ? <Loading /> : (
         <div className="content">
 
             <h1>Dashboard</h1>

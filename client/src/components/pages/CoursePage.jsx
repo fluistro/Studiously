@@ -5,6 +5,7 @@ import { getCourseAssignments, deleteAssignment } from "../../connection/assignm
 import CreateAssignmentForm from "../forms/CreateAssignmentForm";
 import EditAssignmentForm from "../forms/EditAssignmentForm";
 import { useParams } from "react-router-dom";
+import Loading from "./Loading";
 
 
 // For Intellisense
@@ -132,6 +133,9 @@ export default function CoursePage({ resetUser }) {
 
     const [update, setUpdate] = useState(false); // To trigger the fetch request effect hook
 
+    // To track if loading screen should be shown
+    const [loading, setLoading] = useState(true);
+
 
     // Callbacks to handle form showing
 
@@ -202,6 +206,8 @@ export default function CoursePage({ resetUser }) {
 
         async function getInfo() {
 
+            setLoading(true);
+
             try {
 
                 const courseData = await getCourse(courseId, resetUser);
@@ -210,26 +216,29 @@ export default function CoursePage({ resetUser }) {
                 const assignmentsData = await getCourseAssignments(resetUser, courseId);
                 setAssignments(assignmentsData);
                 setAssignments(val => sortFilterAssignments("name", false, val));
+                setSorter("name");
+                setShowCompleted(false);
 
             } catch (error) {
                 console.log(`Course page error: ${error.message}`);
+            } finally {
+                setLoading(false);
             }
 
         }
 
         getInfo();
-        document.getElementById("select-sort").value = "name";
 
     }, [resetUser, update, courseId]);
 
     
-    return (
+    return loading ? <Loading /> : (
         <div className="content">
             <h1>{course && course.name}</h1>
 
             <label htmlFor="select-sort">Sort by:  </label>
 
-            <select name="select-sort" id="select-sort" onChange={onSorterChange}>
+            <select name="select-sort" id="select-sort" onChange={onSorterChange} value={sorter}>
                 <option value="name">Name</option>
                 <option value="dueDate">Due Date</option>
                 <option value="grade">Grade</option>
@@ -243,6 +252,7 @@ export default function CoursePage({ resetUser }) {
             <input type="checkbox" 
                 id="show-completed" 
                 name="completed" 
+                checked={showCompleted}
                 onClick={onFilterChange}></input> 
 
             <br />
