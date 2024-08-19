@@ -126,13 +126,13 @@ export default function DashboardPage({ resetUser }) {
             {/* List of upcoming assignments, sorted by due date */}
             <div>
                 <h2>Upcoming Assignments</h2>
-                {assignments.length > 0 ? assignments : <p>None</p>}
+                {assignments.length > 0 ? assignments : <p>You have no upcoming assignments!</p>}
             </div>
 
             {/* List of courses, sorted by grade */}
             <div>
                 <h2>Grades</h2>
-                {courses}
+                {courses.length > 0 ? courses : <p>No courses have been created.</p>}
             </div>
 
         </div>
