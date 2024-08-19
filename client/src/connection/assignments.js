@@ -143,6 +143,7 @@ export const editAssignment = async (courseId, assignmentId, assignmentInfo, onU
 
 
 /**
+ * @param {string} courseId
  * @param {string} assignmentId
  * @param {function():void} onUnauthorized - To call if the user is not logged in
  * 
