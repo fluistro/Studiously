@@ -214,7 +214,7 @@ export default function CourseListPage({ resetUser }) {
 
             <h2>Course List</h2>
 
-            {courseList}
+            {courseList.length > 0 ? courseList : <p>No courses have been created.</p>}
 
             {/* Lightboxes */}
             {form === "create" && CreateCourseLightbox(resetUser, closeForm)}
