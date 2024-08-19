@@ -229,7 +229,7 @@ AssignmentRouter.put("/:courseId/:assignmentId", async (req, res) => {
 
         // Edit assignment
 
-        const updateInfo = Assignment.updateOne(
+        const updateInfo = await Assignment.updateOne(
             { _id: assignmentId },
             { name, dueDate, isCompleted, grade, weight }
         );
