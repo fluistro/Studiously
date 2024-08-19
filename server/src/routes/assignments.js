@@ -287,7 +287,7 @@ AssignmentRouter.delete("/:courseId/:assignmentId", async (req, res) => {
         }
 
         // Delete assignment
-        const deleteInfo = Assignment.deleteOne(
+        const deleteInfo = await Assignment.deleteOne(
             { _id: assignmentId }
         );
         if (deleteInfo.deletedCount !== 1) {
