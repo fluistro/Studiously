@@ -51,10 +51,12 @@ export const calculateGrade = async (onUnauthorized, courseId) => {
     let totalEarned = 0;
     for (let i = 0; i < hasGradeAndWeight.length; i++) {
         totalWeight += hasGradeAndWeight[i].weight;
-        totalEarned += hasGradeAndWeight[i].grade;
+        totalEarned += hasGradeAndWeight[i].grade * hasGradeAndWeight[i].weight;
     }
 
     if (totalWeight === 0) return null;
-    return totalEarned / totalWeight * 100;
+
+    // Round to 2 decimal places
+    return Math.round(totalEarned / totalWeight * 100) / 100;
 
 }
