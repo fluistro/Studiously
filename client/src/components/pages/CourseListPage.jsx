@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { getUserCourses, deleteCourse } from "../../connection/courses";
+
 import CreateCourseForm from "../forms/CreateCourseForm";
 import EditCourseForm from "../forms/EditCourseForm";
-import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 
 
@@ -16,7 +18,6 @@ import Loading from "./Loading";
 /**
  * Lightbox for displaying create course form
  * 
- * @param {function():void} update - To update the course list
  * @param {function():void} logout - To reset user state 
  * @param {function():void} close - To close lightbox 
  * @returns {React.JSX.Element}
@@ -24,26 +25,25 @@ import Loading from "./Loading";
 const CreateCourseLightbox = (logout, close) => {
     return (
         <div className="lightbox">
-            <CreateCourseForm close={close} logout={logout}/>
+            <CreateCourseForm logout={logout} close={close} />
         </div>
-    )
+    );
 };
 
 /**
  * Lightbox for displaying edit course form
  * 
- * @param {function():void} update - To update the course list
  * @param {Course} course - Course info to edit
  * @param {function():void} logout - To reset user state 
  * @param {function():void} close - To close lightbox 
  * @returns {React.JSX.Element}
  */
-const EditCourseLightbox = ( course, logout, close) => {
+const EditCourseLightbox = (course, logout, close) => {
     return (
         <div className="lightbox">
-            <EditCourseForm course={course} close={close} logout={logout}/>
+            <EditCourseForm course={course} logout={logout} close={close} />
         </div>
-    )
+    );
 };
 
 /**
@@ -53,28 +53,34 @@ const EditCourseLightbox = ( course, logout, close) => {
  * @returns {[Course]}
  */
 const sortCourses = (sorter, courses) => {
-    const newCourses = courses.slice();
+
+    let newCourses = courses.slice();
 
     switch(sorter) {
 
         case "name":
-            newCourses.sort((a, b) => {
+            newCourses = newCourses.sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
             break;
 
         case "grade":
-            newCourses.sort((a, b) => {
-                if (a.grade === null && b.grade === null) return 0;
-                if (a.grade === null) return 1;
-                if (b.grade === null) return -1;
+            newCourses = newCourses.sort((a, b) => {
+                
+                const aHasGrade = Object.hasOwn(a, "grade");
+                const bHasGrade = Object.hasOwn(b, "grade");
+
+                if (!aHasGrade && !bHasGrade) return 0;
+                if (!aHasGrade) return 1;
+                if (!bHasGrade) return -1;
                 return b.grade - a.grade;
+
             });
             break;
 
         case "assignments":
-            newCourses.sort((a, b) => {
-                return a.assignments.length - b.assignments.length;
+            newCourses = newCourses.sort((a, b) => {
+                return b.assignments.length - a.assignments.length;
             });
             break;
 
@@ -97,16 +103,14 @@ export default function CourseListPage({ resetUser }) {
     const navigate = useNavigate();
 
     const [courses, setCourses] = useState([]); // Array of Course objects
-    const [form, setForm] = useState(); // To indicate which (if any) form to show
-    const [course, setCourse] = useState(); // For the edit form
 
-    const [updateCourses, setUpdateCourses] = useState(false); // To trigger the fetch request effect hook
+    const [form, setForm] = useState(); // Indicates which form to show
+    const [course, setCourse] = useState(); // Previous course info for the edit form
 
-    // For the course list
-    const [sorter, setSorter] = useState("name");
-
-    // To track if loading screen should be shown
-    const [loading, setLoading] = useState(true);
+    const [sorter, setSorter] = useState("name"); // Sort for the course list
+    
+    const [update, setUpdate] = useState(false); // Toggle to trigger the fetch request useEffect hook
+    const [loading, setLoading] = useState(true); // To track if loading screen should be shown
 
 
     // Callbacks to handle form showing
@@ -118,8 +122,8 @@ export default function CourseListPage({ resetUser }) {
 
     const showEditCourseForm = useCallback(
         course => {
-            setForm("edit");
             setCourse(course);
+            setForm("edit");
         },
         []
     );
@@ -127,7 +131,7 @@ export default function CourseListPage({ resetUser }) {
     const closeForm = useCallback(
         () => {
             setForm(undefined);
-            setUpdateCourses(val => !val);
+            setUpdate(val => !val);
         }, 
         []
     );
@@ -136,19 +140,18 @@ export default function CourseListPage({ resetUser }) {
     // Sort handler
     const onSorterChange = event => {
         setSorter(event.target.value);
-        setCourses(courses => sortCourses(sorter, courses));
     }
 
 
     // Course list as a JSX list
     const courseList = useMemo (
-        () => courses.map((course, index) => {
+        () => sortCourses(sorter, courses).map((course, index) => {
             return (
                 <div className="list-area" key={index} >
 
                     <div className="list-block" onClick={() => navigate(`/home/courses/${course._id}`)}>
                         <div><p>{course.name}</p></div>
-                        <div><p>{`${course.assignments.length} upcoming assignments`}</p></div>
+                        <div><p>{`${course.assignments.length} upcoming assignment${course.assignments.length === 1 ? "" : "s"}`}</p></div>
                         <div><p>{course.grade !== null ? course.grade : "No grade"}</p></div>
                     </div>
 
@@ -157,18 +160,22 @@ export default function CourseListPage({ resetUser }) {
                     <button className="red-button" onClick={
                         async () => {
                             await deleteCourse(course._id, resetUser);
-                            setUpdateCourses(val => !val); // Re-render course list
+                            setUpdate(val => !val); // Re-render course list
                         }
                     }>Delete</button>
 
                 </div>
             );
         }),
-        [courses, showEditCourseForm, resetUser, navigate]
+        [
+            sorter,
+
+            // These do not change after first render
+            courses, showEditCourseForm, resetUser, navigate]
     );
 
 
-    // Fetch courses on first render
+    // Update courses, reset sorter
     useEffect(() => {
 
         async function getInfo() {
@@ -179,7 +186,7 @@ export default function CourseListPage({ resetUser }) {
                 
                 const data = await getUserCourses(resetUser);
                 setCourses(data);
-                setCourses(courses => sortCourses("name", courses));
+
                 setSorter("name");
 
             } catch (error) {
@@ -192,7 +199,9 @@ export default function CourseListPage({ resetUser }) {
 
         getInfo();
 
-    }, [resetUser, updateCourses]);
+        }, 
+        [update, resetUser]
+    );
 
     return loading ? <Loading /> : (
 

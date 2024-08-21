@@ -7,9 +7,9 @@ import { editAssignment } from "../../connection/assignments";
  * 
  * Expects:
  * - Course id associated with the assignment to edit
- * - Old information about the assignment (assignment object)
- * - A method to log out the user
- * - A method to close the form (on success/cancel)
+ * - Old information about the assignment (Assignment object)
+ * - A callback to log out the user
+ * - A callback to close the form (on success/cancel)
  */
 export default function EditAssignmentForm({ courseId, assignment, logout, close }) {
 
@@ -43,8 +43,7 @@ export default function EditAssignmentForm({ courseId, assignment, logout, close
                 weight: weight && +weight
             }
 
-            console.log(assignmentInfo)
-
+            // If session already exists or the login request is successful, redirect to homepage.
             await editAssignment(courseId, assignment._id, assignmentInfo, logout);
             close();
 

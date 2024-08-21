@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 
 import { getCourse } from "../../connection/courses";
 import { getCourseAssignments, deleteAssignment } from "../../connection/assignments";
+
 import CreateAssignmentForm from "../forms/CreateAssignmentForm";
 import EditAssignmentForm from "../forms/EditAssignmentForm";
-import { useParams } from "react-router-dom";
 import Loading from "./Loading";
 
 
@@ -39,7 +40,7 @@ const createAssignmentLightbox = (courseId, logout, close) => {
  * Lightbox for displaying edit assignment form.
  * 
  * @param {string} courseId 
- * @param {string} assignmentId 
+ * @param {Assignment} assignment
  * @param {function():void} logout 
  * @param {function():void} close 
  * @returns {React.JSX.Element}
@@ -126,7 +127,7 @@ const sortFilterAssignments = (sorter, showCompleted, assignments) => {
 
 
 /**
- * Course page component. Expects a function to reset user state, and the current course id.
+ * Course page component. Expects a function to reset user state.
  * 
  * @returns {React.JSX.Element}
  */
@@ -145,7 +146,6 @@ export default function CoursePage({ resetUser }) {
     const [showCompleted, setShowCompleted] = useState(false);
 
     const [update, setUpdate] = useState(false); // Toggle to trigger the fetch request useEffect hook
-
     const [loading, setLoading] = useState(true); // To track if loading screen should be shown
 
 
@@ -158,7 +158,6 @@ export default function CoursePage({ resetUser }) {
 
     const showEditAssignmentForm = useCallback(
         assignment => {
-            console.log(assignment)
             setAssignment(assignment);
             setForm("edit");
         },

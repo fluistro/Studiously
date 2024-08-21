@@ -6,14 +6,14 @@ import { editCourse } from "../../connection/courses";
  * Edit course form component. Contains name field.
  * 
  * Expects:
- * - Old info about course to edit
+ * - Old information about the course (Course object)
  * - A callback to log out the user
  * - A callback to close the form (on success/cancel)
  */
 export default function EditCourseForm({ course, logout, close }) {
 
     // Input fields
-    const [name, setName] = useState();
+    const [name, setName] = useState(course.name);
 
     // Possible error returned by request
     const [error, setError] = useState();
@@ -32,7 +32,6 @@ export default function EditCourseForm({ course, logout, close }) {
 
             // If session already exists or the login request is successful, redirect to homepage.
             await editCourse(course._id, { name }, logout);
-
             close();
 
         } catch (error) {
@@ -62,12 +61,12 @@ export default function EditCourseForm({ course, logout, close }) {
                     <input type="text" 
                            id="edit-course-name" 
                            name="name" 
-                           value={course.name}
+                           value={name}
                            onChange={event => setName(event.target.value)}></input>
                     <br/><br/>
                 </form>
                 <button type="reset" onClick={cancel} className="red-outline-button"><b>Cancel</b></button>
-                <button type="submit" onClick={onSubmit} className="purple-button"><b>Edit</b></button>
+                <button type="submit" onClick={onSubmit} className="purple-button"><b>Save</b></button>
             </div>
 
         </div>
