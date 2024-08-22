@@ -283,9 +283,9 @@ export default function CoursePage({ resetUser }) {
 
             <br /><br />
 
-            <button className="purple-button" onClick={() => showCreateAssignmentForm()}>Create</button>
-
             <h2>Assignment List</h2>
+
+            <button className="purple-button" onClick={() => showCreateAssignmentForm()}>Create</button>
 
             {assignmentList.length > 0 ? assignmentList : <p>{`There are no ${showCompleted ? "completed" : "uncompleted"} assignments for this course.`}</p>}
 
