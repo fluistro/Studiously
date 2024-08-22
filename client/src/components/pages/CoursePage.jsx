@@ -260,6 +260,7 @@ export default function CoursePage({ resetUser }) {
         <div className="content">
 
             <h1>{course && course.name}</h1>
+            <h2>Grade: {(course && course.grade) ? course.grade : "None"}</h2>
 
             <label htmlFor="select-sort">Sort assignments by:  </label>
 

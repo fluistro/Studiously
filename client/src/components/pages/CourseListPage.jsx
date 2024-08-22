@@ -152,7 +152,7 @@ export default function CourseListPage({ resetUser }) {
                     <div className="list-block" onClick={() => navigate(`/home/courses/${course._id}`)}>
                         <div><p>{course.name}</p></div>
                         <div><p>{`${course.assignments.length} upcoming assignment${course.assignments.length === 1 ? "" : "s"}`}</p></div>
-                        <div><p>{course.grade !== null ? course.grade : "No grade"}</p></div>
+                        <div><p>Grade: {course.grade || "None"}</p></div>
                     </div>
 
                     {/* Buttons */}

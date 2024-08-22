@@ -24,17 +24,17 @@ const getAssignmentJSX = assignmentList => {
     let arr = assignmentList.slice();
 
     // Filter out completed assignments
-    arr.filter(assignment => !assignment.isCompleted);
+    arr = arr.filter(assignment => !assignment.isCompleted);
 
     // Sort assignment list by due date
-    arr.sort((a,b) => a.dueDate - b.dueDate);
+    arr = arr.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     // Convert to JSX
     const result = arr.map((assignment, index) => {
         return (
             <div className="list-block" key={index}>
                 <div><p>{assignment.name}</p></div>
-                <div><p>{assignment.dueDate.slice(0, 10)}</p></div>
+                <div><p>Due: {assignment.dueDate.slice(0, 10)}</p></div>
             </div>
         );
     });
@@ -66,7 +66,7 @@ const getCourseJSX = courseList => {
         return (
             <div className="list-block" key={index}>
                 <div><p>{course.name}</p></div>
-                <div><p>{course.grade}</p></div>
+                <div><p>Grade: {course.grade || "None"}</p></div>
             </div>
         );
     });
