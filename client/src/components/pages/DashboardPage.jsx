@@ -34,8 +34,8 @@ const getAssignmentJSX = assignmentList => {
     const result = arr.map((assignment, index) => {
         return (
             <div className="list-block" key={index}>
-                <div><p>{assignment.name}</p></div>
-                <div><p>Due: {assignment.dueDate.slice(0, 10)}</p></div>
+                <div className="list-text"><p>{assignment.name}</p></div>
+                <div className="list-text"><p>Due: {assignment.dueDate.slice(0, 10)}</p></div>
             </div>
         );
     });
