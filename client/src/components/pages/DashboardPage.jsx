@@ -66,7 +66,7 @@ const getCourseJSX = courseList => {
         return (
             <div className="list-block" key={index}>
                 <div><p>{course.name}</p></div>
-                <div><p>Grade: {course.grade || "None"}</p></div>
+                <div><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
             </div>
         );
     });

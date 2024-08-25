@@ -192,8 +192,8 @@ export default function CoursePage({ resetUser }) {
 
                     <div className="list-block">
                         <div><p>{assignment.name}</p></div>
-                        <div><p>{Object.hasOwn(assignment, "weight") && `Weight: ${assignment.weight}`}</p></div>
-                        <div><p>{Object.hasOwn(assignment, "grade") && `grade: ${assignment.grade}`}</p></div>
+                        <div><p>{Object.hasOwn(assignment, "weight") ? `Weight: ${assignment.weight}%` : "No weight"}</p></div>
+                        <div><p>{Object.hasOwn(assignment, "grade") ? `Grade: ${assignment.grade}%` : "No grade"}</p></div>
                         <div><p>{`Due: ${assignment.dueDate.slice(0, 10)}`}</p></div>
                     </div>
 
@@ -260,7 +260,7 @@ export default function CoursePage({ resetUser }) {
         <div className="content">
 
             <h1>{course && course.name}</h1>
-            <h2>Grade: {(course && course.grade) ? course.grade : "None"}</h2>
+            <h2>Grade: {(course && course.grade) ? `${course.grade}%` : "None"}</h2>
 
             <label htmlFor="select-sort">Sort assignments by:  </label>
 
