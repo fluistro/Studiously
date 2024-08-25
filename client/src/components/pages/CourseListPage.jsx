@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { getUserCourses, deleteCourse } from "../../connection/courses";
 
@@ -100,8 +100,6 @@ const sortCourses = (sorter, courses) => {
  */
 export default function CourseListPage({ resetUser }) {
 
-    const navigate = useNavigate();
-
     const [courses, setCourses] = useState([]); // Array of Course objects
 
     const [form, setForm] = useState(); // Indicates which form to show
@@ -149,8 +147,8 @@ export default function CourseListPage({ resetUser }) {
             return (
                 <div className="list-area" key={index} >
 
-                    <div className="list-block" onClick={() => navigate(`/home/courses/${course._id}`)}>
-                        <div><p>{course.name}</p></div>
+                    <div className="list-block">
+                        <div><NavLink to={`/home/courses/${course._id}`} >{course.name}</NavLink></div>
                         <div><p>{`${course.assignments.length} upcoming assignment${course.assignments.length === 1 ? "" : "s"}`}</p></div>
                         <div><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
                     </div>
@@ -171,7 +169,7 @@ export default function CourseListPage({ resetUser }) {
             sorter,
 
             // These do not change after first render
-            courses, showEditCourseForm, resetUser, navigate]
+            courses, showEditCourseForm, resetUser]
     );
 
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import Loading from "./Loading";
 import { getAssignments } from "../../connection/assignments";
 import { getUserCourses } from "../../connection/courses";
@@ -65,7 +66,7 @@ const getCourseJSX = courseList => {
     const result = arr.map((course, index) => {
         return (
             <div className="list-block" key={index}>
-                <div><p>{course.name}</p></div>
+                <div><NavLink to={`/home/courses/${course._id}`} >{course.name}</NavLink></div>
                 <div><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
             </div>
         );
