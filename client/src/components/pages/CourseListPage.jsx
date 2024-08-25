@@ -148,19 +148,19 @@ export default function CourseListPage({ resetUser }) {
                 <div className="list-area" key={index} >
 
                     <div className="list-block">
-                        <div><NavLink to={`/home/courses/${course._id}`} >{course.name}</NavLink></div>
-                        <div><p>{`${course.assignments.length} upcoming assignment${course.assignments.length === 1 ? "" : "s"}`}</p></div>
-                        <div><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
+                        <div className="list-text"><NavLink to={`/home/courses/${course._id}`} >{course.name}</NavLink></div>
+                        <div className="list-text"><p>{`${course.assignments.length} assignment${course.assignments.length === 1 ? "" : "s"}`}</p></div>
+                        <div className="list-text"><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
                     </div>
 
                     {/* Buttons */}
-                    <button className="purple-button" onClick={() => showEditCourseForm(course)}>Edit</button>
-                    <button className="red-button" onClick={
+                    <div className="list-button"><button className="purple-button" onClick={() => showEditCourseForm(course)}>Edit</button></div>
+                    <div className="list-button"><button className="red-button" onClick={
                         async () => {
                             await deleteCourse(course._id, resetUser);
                             setUpdate(val => !val); // Re-render course list
                         }
-                    }>Delete</button>
+                    }>Delete</button></div>
 
                 </div>
             );

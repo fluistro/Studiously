@@ -191,20 +191,20 @@ export default function CoursePage({ resetUser }) {
                 <div className="list-area" key={index}>
 
                     <div className="list-block">
-                        <div><p>{assignment.name}</p></div>
-                        <div><p>{Object.hasOwn(assignment, "weight") ? `Weight: ${assignment.weight}%` : "No weight"}</p></div>
-                        <div><p>{Object.hasOwn(assignment, "grade") ? `Grade: ${assignment.grade}%` : "No grade"}</p></div>
-                        <div><p>{`Due: ${assignment.dueDate.slice(0, 10)}`}</p></div>
+                        <div className="list-text"><p>{assignment.name}</p></div>
+                        <div className="list-text"><p>{Object.hasOwn(assignment, "weight") ? `Weight: ${assignment.weight}%` : "No weight"}</p></div>
+                        <div className="list-text"><p>{Object.hasOwn(assignment, "grade") ? `Grade: ${assignment.grade}%` : "No grade"}</p></div>
+                        <div className="list-text"><p>{`Due: ${assignment.dueDate.slice(0, 10)}`}</p></div>
                     </div>
 
                     {/* Buttons */}
-                    <button className="purple-button" onClick={() => showEditAssignmentForm(assignment)}>Edit</button>
-                    <button className="red-button" onClick={
+                    <div className="list-button"><button className="purple-button" onClick={() => showEditAssignmentForm(assignment)}>Edit</button></div>
+                    <div className="list-button"><button className="red-button" onClick={
                         async () => {
                             await deleteAssignment(courseId, assignment._id, resetUser);
                             setUpdate(val => !val);
                         }
-                    }>Delete</button>
+                    }>Delete</button></div>
 
                 </div>
             );

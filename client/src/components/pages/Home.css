@@ -45,13 +45,24 @@
     border:none;
 }
 
+.list-area {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .list-block {
     background-color: #d7d6e2;
     box-shadow: 1px 1px 1px 1px #282c34;
     border-radius: 2px;
 
     height: 50px;
+    flex-grow: 1;
+
     margin: 20px;
+
     padding-left: 20px;
     padding-right: 20px;
 
@@ -62,16 +73,25 @@
     font-size: 22px;
 }
 
+.list-button {
+    height: 50px;
+    margin: 10px;
+}
+
+.list-text {
+    width: 200px;
+}
+
 .purple-button {
     background-color:#a376de;
-    height: 40px;
+    height: 50px;
     width: 80px;
     border-radius: 5px;
 }
 
 .red-button {
     background-color:#f80000d0;
-    height: 40px;
+    height: 50px;
     width: 80px;
     border-radius: 5px;
 }

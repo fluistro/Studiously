@@ -66,8 +66,8 @@ const getCourseJSX = courseList => {
     const result = arr.map((course, index) => {
         return (
             <div className="list-block" key={index}>
-                <div><NavLink to={`/home/courses/${course._id}`} >{course.name}</NavLink></div>
-                <div><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
+                <div className="list-text"><NavLink to={`/home/courses/${course._id}`} >{course.name}</NavLink></div>
+                <div className="list-text"><p>{course.grade ? `Grade: ${course.grade}%` : "No grade"}</p></div>
             </div>
         );
     });
