@@ -25,26 +25,6 @@
     height: 100%;
 }
 
-.sidebar {
-    height:100%;
-    width:300px;
-    background-color:#fff;
-    position:fixed;
-
-    border: solid black;
-    border-width: 1px;
-    box-shadow: 1px 1px 1px 1px #282c34;
-    border-radius: 4px;
-}
-
-.sidebar-item {
-    width:100%;
-    display:block;
-    padding:8px 16px;
-    text-align:left;
-    border:none;
-}
-
 .list-area {
     display: flex;
     flex-direction: row;

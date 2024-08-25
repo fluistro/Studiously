@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { logout } from "../../connection/authentication";
+import "./Sidebar.css";
 
 
 /**
@@ -19,13 +20,19 @@ export default function Sidebar({ username, resetUser }) {
     return (
         <div className="sidebar">
 
-            <h3 className="sidebar-title">Studiously</h3>
+            <div className="sidebar-top">
 
-            <NavLink to="/home" className="sidebar-item">Dashboard</NavLink>
-            <NavLink to="/home/courses" className="sidebar-item">Courses</NavLink>
+                <h3 className="sidebar-title">Studiously</h3>
 
-            <p>Currently logged in as: {username}</p>
-            <button className="red-button" onClick={handleLogout}>Log out</button>
+                <div><NavLink to="/home" className="sidebar-item">Dashboard</NavLink></div>
+                <NavLink to="/home/courses" className="sidebar-item">Courses</NavLink>
+
+            </div>
+
+            <div className="sidebar-bottom">
+                <p>Currently logged in as: {username}</p>
+                <button className="red-button" onClick={handleLogout}>Log out</button>
+            </div>
 
         </div>
     );
