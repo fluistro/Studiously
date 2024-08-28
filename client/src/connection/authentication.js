@@ -1,5 +1,5 @@
 // API requests for user authentication (login, signup, etc.)
-const route = `${process.env.API_URL}/api/auth`;;
+const route = `${process.env.API_URL}/api/auth`;
 
 
 /**
@@ -25,9 +25,6 @@ const route = `${process.env.API_URL}/api/auth`;;
  * @returns {Promise<User>} - Username and id of the new user (if created successfully).
  */
 export const signup = async user => {
-
-    // For testing
-    console.log(`Called signup with user ${user}`);
 
     try {
 
@@ -64,9 +61,6 @@ export const signup = async user => {
  * @returns {Promise<User>} - If login successful, return username and id.
  */
 export const login = async (user, onSessionExists) => {
-
-    // For testing
-    console.log(`Called login with user ${user}`);
 
     try {
 
@@ -106,9 +100,6 @@ export const login = async (user, onSessionExists) => {
  */
 export const logout = async () => {
 
-    // For testing
-    console.log(`Called logout`);
-
     try {
 
         const response = await fetch(`${route}/`, {
@@ -135,9 +126,6 @@ export const logout = async () => {
  * @returns {Promise<User|undefined>} - Username and user_id of the current user, or undefined if not logged in.
  */
 export const getCurrentUser = async () => {
-
-    // For testing
-    console.log("called getCurrentUser");
 
     try {
 
