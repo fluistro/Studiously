@@ -15,7 +15,15 @@ export default function Home() {
 
     // Set current user on first render
     useEffect(() => {
-        getCurrentUser().then(data => setUser(data));
+
+        const loadUser = async () => {
+            const data = await getCurrentUser();
+            console.log(data);
+            setUser(data);
+        }
+
+        loadUser();
+        
     }, []);
 
     return user ? (

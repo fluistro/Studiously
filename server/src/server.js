@@ -42,7 +42,7 @@ import AssignmentRouter from "./routes/assignments.js";
             }),
             cookie: {
                 sameSite: true,
-                secure: NODE_ENV === 'production',
+                secure: false,
                 maxAge: parseInt(SESSION_LIFETIME)
             }
         }));
