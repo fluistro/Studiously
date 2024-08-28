@@ -62,6 +62,8 @@ export const signup = async user => {
  */
 export const login = async (user, onSessionExists) => {
 
+    console.log(route);
+
     try {
 
         const response = await fetch(`${route}/login`, {
