@@ -64,6 +64,7 @@
 
 .purple-button {
     background-color:#a376de;
+    color: white;
     height: 50px;
     width: 80px;
     border-radius: 5px;
@@ -71,6 +72,7 @@
 
 .red-button {
     background-color:#f80000d0;
+    color: white;
     height: 50px;
     width: 80px;
     border-radius: 5px;
