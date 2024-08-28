@@ -1,7 +1,7 @@
 import { validateResponse } from "./utils";
 
 // API requests to /assignments endpoint
-const route = `${process.env.API_URL}/api/assignments`;
+const route = `https://studiously.onrender.com/api/assignments`;
 
 
 /**

@@ -1,5 +1,5 @@
 // API requests for user authentication (login, signup, etc.)
-const route = `${process.env.API_URL}/api/auth`;
+const route = `https://studiously.onrender.com/api/auth`;
 
 
 /**
