@@ -1,7 +1,7 @@
 // API requests for getting course information (once authenticated)
 import { validateResponse, calculateGrade } from "./utils";
 
-const route = "http://localhost:5000/api/courses";
+const route = `${process.env.API_URL}/api/courses`;
 
 /**
  * @typedef Course 

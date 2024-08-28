@@ -1,7 +1,7 @@
 import { validateResponse } from "./utils";
 
 // API requests to /assignments endpoint
-const route = "http://localhost:5000/api/assignments";
+const route = `${process.env.API_URL}/api/assignments`;
 
 
 /**
