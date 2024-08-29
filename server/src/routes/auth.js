@@ -1,6 +1,8 @@
 // Imports
 import express from "express";
+import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { JWT_SECRET } from "./config.js";
 
 
 const AuthRouter = express.Router();
@@ -50,18 +52,11 @@ AuthRouter.post("/signup", async (req, res) => {
  * Log in a user.
  * 
  * Requires: username, (plaintext) password
- * Response: username and userId, or an error message
+ * Response: username, userId, and token, or an error message
  */
 AuthRouter.post("/login", async (req, res) => {
 
     try {
-
-        // Check if a user is already logged in
-        if (req.session.user) {
-            return res.status(409).send({
-                message: "User session already exists"
-            });
-        }
 
         // Username and password validation
         const { username, password } = req.body;
@@ -84,13 +79,13 @@ AuthRouter.post("/login", async (req, res) => {
             });
         }
         
-        // Send user information and update session
+        // Send user information and token
         const userInfo = {
             username: user.username,
-            userId: user._id
+            userId: user._id,
+            token: jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '24h' })
         }
-        req.session.user = userInfo;
-        return res.status(200).send(req.session.user);
+        return res.status(200).send(userInfo);
 
     } catch(error) {
         return res.status(500).send({
@@ -100,36 +95,6 @@ AuthRouter.post("/login", async (req, res) => {
 
 });
 
-/**
- * Log out the current user. Has no effect if there is no current user session.
- * 
- * Response: none
- */
-AuthRouter.delete("/", (req, res) => {
-
-    const session = req.session;
-
-    try {
-
-        const user = session.user;
-        if (!user) {
-            return res.status(204).send();
-        }
-
-        // Destroy current user session
-        session.destroy(err => {
-            if (err) throw (err);
-            res.clearCookie(process.env.SESSION_NAME);
-            return res.status(204).send();
-        });
-
-    } catch (error) {
-        return res.status(500).send({
-            message: error.message
-        });
-    }
-
-});
 
 /**
  * Get the currently logged in user.
@@ -140,10 +105,13 @@ AuthRouter.get("/", (req, res) => {
 
     try {
 
-        const user = req.session.user;
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
 
-        if (user) return res.status(200).send(user);
-        else return res.status(204).send();
+        if (!token) return res.status(204).send();
+
+        const decoded = jwt.verify(token, JWT_SECRET);
+        return res.status(200).send({userId: decoded.userId, username: decoded.username});
 
     } catch (error) {
         return res.status(500).send({

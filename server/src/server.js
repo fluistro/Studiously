@@ -2,11 +2,9 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import session from "express-session";
-import MongoStore from "connect-mongo";
 
 // Environment variables
-import { PORT, NODE_ENV, MONGO_URI, SESSION_NAME, SESSION_SECRET, SESSION_LIFETIME } from "./config.js";
+import { PORT, MONGO_URI } from "./config.js";
 
 // Routers
 import AuthRouter from "./routes/auth.js";
@@ -28,25 +26,6 @@ import AssignmentRouter from "./routes/assignments.js";
             credentials: true
         }));
         app.use(express.json());
-
-        // Use user session for authentication
-        app.use(session({
-            name: SESSION_NAME,
-            secret: SESSION_SECRET,
-            saveUninitialized: false,
-            resave: false,
-            store: MongoStore.create({
-                mongoUrl: MONGO_URI,
-                dbName: "session",
-                ttl: SESSION_LIFETIME / 1000
-            }),
-            cookie: {
-                sameSite: 'none',
-                secure: true,
-                httpOnly: true,
-                maxAge: parseInt(SESSION_LIFETIME)
-            }
-        }));
     
         // Connect routers and begin listening
         const apiRouter = express.Router();

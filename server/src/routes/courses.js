@@ -11,21 +11,24 @@ const CourseRouter = express.Router();
 // Middleware to ensure user is authenticated
 CourseRouter.use(async (req, res, next) => {
 
-    const currentUser = req.session.user;
-    if (!currentUser) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
         return res.status(401).send({ 
             message: "Not currently logged in" 
         });
     }
 
-    const user = await User.findById(currentUser.userId);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.userId;
+    const user = await User.findById(userId);
     if (!user) {
         return res.status(404).send({
             message: "User not found"
         });
     }
 
-    req.userId = currentUser.userId;
+    req.userId = userId;
     req.user = user;
     next();
     

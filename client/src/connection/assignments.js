@@ -30,6 +30,7 @@ export const getAssignments = async onUnauthorized => {
     try {
 
         const response = await fetch(`${route}/`, {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: "include"
         });
 
@@ -56,6 +57,7 @@ export const getCourseAssignments = async (onUnauthorized, courseId) => {
     try {
 
         const response = await fetch(`${route}/${courseId}`, {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: "include"
         });
 
@@ -88,6 +90,7 @@ export const createAssignment = async (courseId, assignmentInfo, onUnauthorized)
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "POST",
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -125,6 +128,7 @@ export const editAssignment = async (courseId, assignmentId, assignmentInfo, onU
 
         const response = await fetch(`${route}/${courseId}/${assignmentId}`, {
             method: "PUT",
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -155,6 +159,7 @@ export const deleteAssignment = async (courseId, assignmentId, onUnauthorized) =
 
         const response = await fetch(`${route}/${courseId}/${assignmentId}`, {
             method: "DELETE",
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: "include",
         });
 
