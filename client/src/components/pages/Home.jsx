@@ -18,7 +18,6 @@ export default function Home() {
 
         const loadUser = async () => {
             const data = await getCurrentUser();
-            console.log(data);
             setUser(data);
         }
 

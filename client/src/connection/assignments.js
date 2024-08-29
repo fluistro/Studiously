@@ -29,6 +29,9 @@ export const getAssignments = async onUnauthorized => {
 
     try {
 
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
+
         const response = await fetch(`${route}/`, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('token')}`
@@ -57,6 +60,9 @@ export const getAssignments = async onUnauthorized => {
 export const getCourseAssignments = async (onUnauthorized, courseId) => {
 
     try {
+
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
 
         const response = await fetch(`${route}/${courseId}`, {
             headers: {
@@ -91,6 +97,9 @@ export const getCourseAssignments = async (onUnauthorized, courseId) => {
 export const createAssignment = async (courseId, assignmentInfo, onUnauthorized) => {
 
     try {
+
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "POST",
@@ -130,6 +139,9 @@ export const editAssignment = async (courseId, assignmentId, assignmentInfo, onU
 
     try {
 
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
+
         const response = await fetch(`${route}/${courseId}/${assignmentId}`, {
             method: "PUT",
             authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -161,6 +173,9 @@ export const editAssignment = async (courseId, assignmentId, assignmentInfo, onU
 export const deleteAssignment = async (courseId, assignmentId, onUnauthorized) => {
 
     try {
+
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
 
         const response = await fetch(`${route}/${courseId}/${assignmentId}`, {
             method: "DELETE",

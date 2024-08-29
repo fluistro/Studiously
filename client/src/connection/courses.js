@@ -25,6 +25,9 @@ export const getUserCourses = async onUnauthorized => {
 
     try {
 
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
+
         const response = await fetch(`${route}/`, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('token')}`
@@ -60,6 +63,9 @@ export const getCourse = async (courseId, onUnauthorized) => {
 
     try {
 
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
+
         const response = await fetch(`${route}/${courseId}`, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('token')}`
@@ -90,6 +96,9 @@ export const getCourse = async (courseId, onUnauthorized) => {
 export const createCourse = async (courseInfo, onUnauthorized) => {
 
     try {
+
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
 
         const response = await fetch(`${route}/`, {
             method: "POST",
@@ -125,6 +134,9 @@ export const editCourse = async (courseId, courseInfo, onUnauthorized) => {
 
     try {
 
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
+
         const response = await fetch(`${route}/${courseId}`, {
             method: "PUT",
             headers: {
@@ -154,6 +166,9 @@ export const editCourse = async (courseId, courseInfo, onUnauthorized) => {
 export const deleteCourse = async (courseId, onUnauthorized) => {
 
     try {
+
+        const token = localStorage.getItem('token');
+        if (!token) return onUnauthorized();
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "DELETE",
