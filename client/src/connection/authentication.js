@@ -1,5 +1,5 @@
 // API requests for user authentication (login, signup, etc.)
-const route = `http://localhost:5000/api/auth`;
+const route = `https://studiously.onrender.com/api/auth`;
 
 
 /**

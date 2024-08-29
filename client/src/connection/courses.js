@@ -1,7 +1,7 @@
 // API requests for getting course information (once authenticated)
 import { validateResponse, calculateGrade } from "./utils";
 
-const route = `http://localhost:5000/api/courses`;
+const route = `https://studiously.onrender.com/api/courses`;
 
 /**
  * @typedef Course 
