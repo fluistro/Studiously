@@ -26,6 +26,7 @@ export const getUserCourses = async onUnauthorized => {
     try {
 
         const response = await fetch(`${route}/`, {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: 'include'
         });
 
@@ -58,6 +59,7 @@ export const getCourse = async (courseId, onUnauthorized) => {
     try {
 
         const response = await fetch(`${route}/${courseId}`, {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: 'include'
         });
 
@@ -87,6 +89,7 @@ export const createCourse = async (courseInfo, onUnauthorized) => {
 
         const response = await fetch(`${route}/`, {
             method: "POST",
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -120,6 +123,7 @@ export const editCourse = async (courseId, courseInfo, onUnauthorized) => {
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "PUT",
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -149,6 +153,7 @@ export const deleteCourse = async (courseId, onUnauthorized) => {
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "DELETE",
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: 'include',
         });
 

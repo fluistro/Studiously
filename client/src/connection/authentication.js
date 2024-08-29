@@ -60,7 +60,7 @@ export const signup = async user => {
  * 
  * @returns {Promise<User>} - If login successful, return username and id.
  */
-export const login = async (user, onSessionExists) => {
+export const login = async (user) => {
 
     try {
 
@@ -75,17 +75,14 @@ export const login = async (user, onSessionExists) => {
 
         if (!response.ok) {
 
-            // Check if session already exists
-            if (response.status === 409) {
-                onSessionExists();
-            }
-
             const { message } = await response.json();
             throw new Error(message);
 
         }
     
-        return await response.json();
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        return {userId: data.userId, username: data.username};
         
     } catch (error) {
         console.log(`Error logging in: ${error}`);
@@ -102,15 +99,7 @@ export const logout = async () => {
 
     try {
 
-        const response = await fetch(`${route}/`, {
-            method: "DELETE",
-            credentials: 'include'
-        });
-
-        if (!response.ok) {
-            const { message } = await response.json();
-            throw new Error(message);
-        }
+        localStorage.removeItem('token');
         
     } catch (error) {
         console.log(`Error logging out: ${error}`);
@@ -130,6 +119,7 @@ export const getCurrentUser = async () => {
     try {
 
         const response = await fetch(`${route}/`, {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
             credentials: 'include'
         });
         
