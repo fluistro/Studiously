@@ -41,8 +41,8 @@ import AssignmentRouter from "./routes/assignments.js";
                 ttl: SESSION_LIFETIME / 1000
             }),
             cookie: {
-                sameSite: 'strict',
-                secure: false,// NODE_ENV === "production",
+                sameSite: 'none',
+                secure: true,
                 maxAge: parseInt(SESSION_LIFETIME)
             }
         }));
