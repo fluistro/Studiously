@@ -2,7 +2,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import { JWT_SECRET } from "./config.js";
+import { JWT_SECRET } from "../config.js";
 
 
 const AuthRouter = express.Router();
@@ -104,7 +104,7 @@ AuthRouter.post("/login", async (req, res) => {
 AuthRouter.get("/", (req, res) => {
 
     try {
-
+        
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
 

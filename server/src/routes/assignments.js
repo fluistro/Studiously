@@ -1,10 +1,12 @@
 // Imports
 import express from "express";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 import User from "../models/User.js";
 import Course from "../models/Course.js";
 import Assignment from "../models/Assignment.js";
+import { JWT_SECRET } from "../config.js";
 
 
 const AssignmentRouter = express.Router();

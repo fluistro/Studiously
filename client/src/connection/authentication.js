@@ -119,7 +119,9 @@ export const getCurrentUser = async () => {
     try {
 
         const response = await fetch(`${route}/`, {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            },
             credentials: 'include'
         });
         
