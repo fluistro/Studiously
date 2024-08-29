@@ -22,7 +22,7 @@ import AssignmentRouter from "./routes/assignments.js";
         const app = express();
         app.disable('x-powered-by');
         app.use(cors({
-            origin: 'https://studiously-brown.vercel.app',
+            origin: 'http://localhost:3000',
             credentials: true
         }));
         app.use(express.json());

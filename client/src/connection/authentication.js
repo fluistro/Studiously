@@ -1,5 +1,5 @@
 // API requests for user authentication (login, signup, etc.)
-const route = `https://studiously.onrender.com/api/auth`;
+const route = `http://localhost:5000/api/auth`;
 
 
 /**
@@ -119,7 +119,9 @@ export const getCurrentUser = async () => {
     try {
 
         const response = await fetch(`${route}/`, {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            },
             credentials: 'include'
         });
         

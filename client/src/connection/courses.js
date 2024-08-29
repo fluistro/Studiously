@@ -1,7 +1,7 @@
 // API requests for getting course information (once authenticated)
 import { validateResponse, calculateGrade } from "./utils";
 
-const route = `https://studiously.onrender.com/api/courses`;
+const route = `http://localhost:5000/api/courses`;
 
 /**
  * @typedef Course 
@@ -26,7 +26,9 @@ export const getUserCourses = async onUnauthorized => {
     try {
 
         const response = await fetch(`${route}/`, {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            },
             credentials: 'include'
         });
 
@@ -59,7 +61,9 @@ export const getCourse = async (courseId, onUnauthorized) => {
     try {
 
         const response = await fetch(`${route}/${courseId}`, {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            },
             credentials: 'include'
         });
 
@@ -89,9 +93,9 @@ export const createCourse = async (courseInfo, onUnauthorized) => {
 
         const response = await fetch(`${route}/`, {
             method: "POST",
-            authorization: `Bearer ${localStorage.getItem('token')}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${localStorage.getItem('token')}`
             },
             credentials: 'include',
             body: JSON.stringify(courseInfo)
@@ -123,9 +127,9 @@ export const editCourse = async (courseId, courseInfo, onUnauthorized) => {
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "PUT",
-            authorization: `Bearer ${localStorage.getItem('token')}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${localStorage.getItem('token')}`
             },
             credentials: 'include',
             body: JSON.stringify(courseInfo)
@@ -153,7 +157,9 @@ export const deleteCourse = async (courseId, onUnauthorized) => {
 
         const response = await fetch(`${route}/${courseId}`, {
             method: "DELETE",
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            },
             credentials: 'include',
         });
 
