@@ -43,6 +43,7 @@ import AssignmentRouter from "./routes/assignments.js";
             cookie: {
                 sameSite: 'none',
                 secure: true,
+                httpOnly: true,
                 maxAge: parseInt(SESSION_LIFETIME)
             }
         }));
