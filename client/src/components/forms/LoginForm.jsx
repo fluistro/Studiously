@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { login } from "../../connection/authentication";
+import Loading from "../pages/Loading";
 import "./Form.css";
 
 
@@ -20,8 +21,13 @@ export default function LoginForm() {
     // To check if login was successful
     const [success, setSuccess] = useState(false);
 
+    // To check if the loading screen should be shown
+    const [loading, setLoading] = useState(false);
+
     // Send login request when form is submitted
     async function onSubmit(event) {
+
+        setLoading(true);
 
         try {
 
@@ -38,12 +44,14 @@ export default function LoginForm() {
 
         } catch (error) {
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
 
     }
 
     // Redirect to homepage if successful
-    return (
+    return loading ? <Loading /> : (
 
         success ? <Navigate to="/home" /> :
 

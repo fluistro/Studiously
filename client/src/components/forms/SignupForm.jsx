@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { signup } from "../../connection/authentication";
+import Loading from "../pages/Loading";
 import "./Form.css";
 
 
@@ -20,8 +21,13 @@ export default function SignupForm() {
     // To check if signup was successful
     const [success, setSuccess] = useState(false);
 
+    // To check if the loading screen should be shown
+    const [loading, setLoading] = useState(false);
+
     // Send signup request when form is submitted
     async function onSubmit(event) {
+
+        setLoading(true);
 
         try {
 
@@ -38,12 +44,14 @@ export default function SignupForm() {
 
         } catch (error) {
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
 
     }
 
     // Redirect to login if successful
-    return (
+    return loading ? <Loading /> : (
 
         success ? <Navigate to="/login" /> :
 
